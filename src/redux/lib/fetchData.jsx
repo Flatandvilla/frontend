@@ -8,7 +8,7 @@ export const fetchData = createAsyncThunk(
     const token = state.authSlice.token;
 
     try {
-      const response = await axios.get(`http://192.168.0.175:8002/api/userRank/${id}/`, {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/userRank/${id}/`, {
         headers: {
           Authorization: `Bearer ${token}`, // Add the token to the request headers
         },

@@ -37,7 +37,8 @@ const LoginForm = () => {
         password: data.password,
 
       };
-      const response = await axios.post(`http://192.168.0.175:8002/api/login/`,
+     
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/login/`,
         loginData,
         {
           headers: {
@@ -45,6 +46,7 @@ const LoginForm = () => {
           },
         }
       );
+
   
       toast.success("Login successful");
    

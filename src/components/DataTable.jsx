@@ -1307,7 +1307,7 @@ const DataTableComponent = () => {
     setIsUpdating(true);
 
     // Construct the API endpoint for updating the rank
-    const updateUrl = `http://192.168.0.175:8002/api/update-rank/${userId}/${query}/${targetUrl}/${google_domain}/`;
+    const updateUrl = `${process.env.REACT_APP_API_URL}/api/update-rank/${userId}/${query}/${targetUrl}/${google_domain}/`;
 
     // Send the update request
     const response = await axios.put(updateUrl, {
@@ -1657,7 +1657,7 @@ const handleDragEnd = async (event) => {
       setIsItemDropped(true);
       setDraggedItem({ query: dragData.query, bookmark: dropData.name });
 
-      const apiUrl = `http://192.168.0.175:8002/api/favourites/${userId}/${encodeURIComponent(query)}/${target_url}/${google_domain}/${b_id}/`;
+      const apiUrl = `${process.env.REACT_APP_API_URL}/api/favourites/${userId}/${encodeURIComponent(query)}/${target_url}/${google_domain}/${b_id}/`;
 
       try {
         const response = await axios.get(apiUrl);

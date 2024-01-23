@@ -11,7 +11,7 @@ export const addKeyword = createAsyncThunk(
 
     try {
       const response = await axios.post(
-        `http://192.168.0.175:8002/api/add-rank/${id}/`,
+        `${process.env.REACT_APP_API_URL}/api/add-rank/${id}/`,
         keywordData,
         {
           headers: {

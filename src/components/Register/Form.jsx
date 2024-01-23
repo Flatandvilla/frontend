@@ -27,7 +27,7 @@ const RegistrationForm = () => {
       };
       
   
-      const response = await axios.post(`http://192.168.0.175:8002/api/register/`,
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/register/`,
         registrationData,
         {
           headers: {

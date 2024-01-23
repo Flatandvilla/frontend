@@ -48,7 +48,7 @@ const [yAxisMax, setYAxisMax] = useState(100);
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`http://192.168.0.175:8002/api/display-ranks/${userId}/${encodedQuery}/${encodedTargetUrl}/${google_domain}/`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/display-ranks/${userId}/${encodedQuery}/${encodedTargetUrl}/${google_domain}/`);
         if (response.ok) {
           const apiData = await response.json();
           setData(apiData);

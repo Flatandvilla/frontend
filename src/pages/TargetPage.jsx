@@ -79,7 +79,7 @@ const handleRowClicked = (row) => {
     setIsUpdating(true);
 
     // Construct the API endpoint for updating the rank
-    const updateUrl = `http://192.168.0.175:8002/api/update-rank/${userId}/${query}/${targetUrl}/${google_domain}/`;
+    const updateUrl = `${process.env.REACT_APP_API_URL}/api/update-rank/${userId}/${query}/${targetUrl}/${google_domain}/`;
 
     // Send the update request
     const response = await axios.put(updateUrl, {
@@ -118,7 +118,7 @@ const handleRowClicked = (row) => {
 
   useEffect(() => {
     const fetchDataForTable = async () => {
-      const url = `http://192.168.0.175:8002/api/get_by_url/${userId}/${encodedTargetUrl}/`;
+      const url = `${process.env.REACT_APP_API_URL}/api/get_by_url/${userId}/${encodedTargetUrl}/`;
       setLoading(true);
       try {
         const response = await fetch(url);
@@ -228,7 +228,7 @@ const handleRowClicked = (row) => {
   ];
   useEffect(() => {
     const fetchDataForChart = async () => {
-      const url = `http://192.168.0.175:8002/api/getit_by_url/${userId}/${encodedTargetUrl}/`;
+      const url = `${process.env.REACT_APP_API_URL}/api/getit_by_url/${userId}/${encodedTargetUrl}/`;
       try {
         const response = await fetch(url);
         if (!response.ok) {

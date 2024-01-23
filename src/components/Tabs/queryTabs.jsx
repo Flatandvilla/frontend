@@ -19,7 +19,7 @@ const TabsCustomAnimation = ({ rowData }) => {
             const fetchTabData = async () => {
                 const encodedQuery = encodeURIComponent(rowData.query);
                 const encodedTargetUrl = encodeURIComponent(rowData.target_url);
-                const url = `http://192.168.0.175:8002/api/display-ranks/${rowData.user}/${encodedQuery}/${encodedTargetUrl}/${rowData.google_domain}/`;
+                const url = `${process.env.REACT_APP_API_URL}/api/display-ranks/${rowData.user}/${encodedQuery}/${encodedTargetUrl}/${rowData.google_domain}/`;
                 try {
                     const response = await fetch(url);
                     if (response.ok) {

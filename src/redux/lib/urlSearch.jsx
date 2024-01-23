@@ -7,7 +7,7 @@ export const fetchUrlData = createAsyncThunk(
   'url/fetchUrlData',
   async (urlData, { rejectWithValue }) => {
     try {
-      const response = await fetch("http://192.168.0.175:8002/keyword/process_url/1/", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/keyword/process_url/1/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

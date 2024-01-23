@@ -9,7 +9,7 @@ export const updateRank = createAsyncThunk(
       const userId = state.authSlice.id;
       const token = state.authSlice.token;
 
-      const url = `http://192.168.0.175:8002/api/update-rank/${userId}/${query}/${targetUrl}/`;
+      const url = `${process.env.REACT_APP_API_URL}/api/update-rank/${userId}/${query}/${targetUrl}/`;
 
       const response = await axios.put(url, {}, {
         headers: {

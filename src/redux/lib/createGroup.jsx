@@ -15,7 +15,7 @@ export const createBookmark = createAsyncThunk(
       const id = state.authSlice.id;
   
     try {
-      const response = await axios.post(`http://192.168.0.175:8002/api/bookmarks/${id}/`, bookmarkData);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/bookmarks/${id}/`, bookmarkData);
         // console.log(response.data)
       return response.data;
 

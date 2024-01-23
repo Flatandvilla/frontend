@@ -9,7 +9,7 @@ export const deleteRank = createAsyncThunk(
     const token = state.authSlice.token;
 
     try {
-      const url = `http://192.168.0.175:8002/api/delete-rank/${userId}/${query_id}/`;
+      const url = `${process.env.REACT_APP_API_URL}/api/delete-rank/${userId}/${query_id}/`;
 
       const response = await axios.delete(url, {
         headers: {

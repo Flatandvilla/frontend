@@ -124,7 +124,7 @@ const handleRenameBookmark = async (bookmarkId, newName) => {
   const baseUrl = process.env.REACT_APP_BASE_URL;
 
   try {
-    const response = await fetch(`http://192.168.0.175:8002/api/bookmarks/update/${userId}/${bookmarkId}/`, {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/api/bookmarks/update/${userId}/${bookmarkId}/`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

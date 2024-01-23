@@ -12,7 +12,7 @@ const initialState = {
 export const fetchQueryDetails = createAsyncThunk('queryDetails/fetchQueryDetails', 
 async ({ userId, query, targetUrl }) => {
   try {
-    const response = await axios.get(`http://192.168.0.175:8002/api/display-ranks/${userId}/${query}/${targetUrl}/`);
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/display-ranks/${userId}/${query}/${targetUrl}/`);
     console.log(response.data)
     return response.data;
   } catch (error) {

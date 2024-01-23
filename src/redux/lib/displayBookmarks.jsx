@@ -20,7 +20,7 @@ export const fetchBookmarks = createAsyncThunk(
       
   
       try {
-        const response = await axios.get(`http://192.168.0.175:8002/api/Displaybookmarks/${id}/`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/Displaybookmarks/${id}/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

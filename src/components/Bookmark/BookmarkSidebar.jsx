@@ -42,7 +42,7 @@ const BookmarkSidebar = ( {isOpen,onClose,averageRank,folderRanks }) => {
 
     try {
 
-      const response = await axios.get(`http://192.168.0.175:8002/api/DisplayFavos/${userId}/${bookmarkId}/`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/DisplayFavos/${userId}/${bookmarkId}/`);
       return response.data;
     } catch (error) {
       console.error('Error fetching favorites:', error);

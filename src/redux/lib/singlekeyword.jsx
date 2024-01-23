@@ -10,7 +10,7 @@ export const addsingleKeyword = createAsyncThunk(
     const token = state.authSlice.token;
     try {
       const response = await axios.post(
-        `http://192.168.0.175:8002/api/add-rank-single/${id}/`,
+        `${process.env.REACT_APP_API_URL}/api/add-rank-single/${id}/`,
         keywordData,
         {
           headers: {

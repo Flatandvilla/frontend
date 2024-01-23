@@ -25,7 +25,7 @@ const BookmarkDetails = () => {
   useEffect(() => {
     const fetchFavosData = async () => {
       try {
-        const favosResponse = await axios.get(`http://192.168.0.175:8002/api/DisplayFavos/${userId}/${bookmarkId}/`);
+        const favosResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/DisplayFavos/${userId}/${bookmarkId}/`);
         console.log(favosResponse);
         if (favosResponse.status === 200) {
           setFavosData(favosResponse.data);

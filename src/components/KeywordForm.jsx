@@ -24,7 +24,7 @@ const KeywordForm = ({ onAddQuery }) => {
         query: data.keywords,
         target_url: data.url,
       };
-      const response = await axios.post('http://192.168.0.175:8002/api/add-rank/', payload, {
+      const response = await axios.post('${process.env.REACT_APP_API_URL}/api/add-rank/', payload, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
