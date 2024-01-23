@@ -13,13 +13,15 @@ import KeywordResearch from '../KeywordResearch';
 import FavouriteBookmark from '../../components/Bookmark/FavouriteBookmark';
 import KeywordQuery from '../KeywordQuery';
 import TargetPage from '../TargetPage';
-import KeywordUrl from '../KeywordUrl';
 import Comparequery from '../Comparequery';
+import { Search } from '../Search';
+import { SearchingPopup } from '../SearchingPopup';
+import UrlCaching from '../UrlCaching';
+import BookmarkDetails from '../Bookmark/BookmarkDetails';
 
 const Index = () => {
   
   const userId = useSelector(state => state?.authSlice?.user?.id);
-  const isAuthenticated = !!userId;
   
   return (
     <Routes>
@@ -27,8 +29,10 @@ const Index = () => {
       <Route path='/keywordresearch' element={<KeywordResearch />} />
       <Route path='/keywordquery' element={<KeywordQuery />} />
       <Route path='/Comparequery' element={<Comparequery />} />
-
-      <Route path='/url' element={<KeywordUrl />} />
+      <Route path='/search' element={<Search />} />
+      <Route path='/searching' element={<SearchingPopup />} />
+      <Route path='/url' element={<UrlCaching />} />
+      <Route path='/BookmarkDetails/:bookmarkId' element={<BookmarkDetails />} />
 
       <Route path='/invoice' element={<Invoice />} />
       <Route path='/schedule' element={<Schedule />} />

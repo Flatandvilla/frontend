@@ -38,6 +38,8 @@ const BookmarkSidebar = ( {isOpen,onClose,averageRank,folderRanks }) => {
   };
 
   const fetchFavorites = async (bookmarkId) => {
+    const baseUrl = process.env.REACT_APP_BASE_URL;
+
     try {
 
       const response = await axios.get(`http://192.168.0.175:8002/api/DisplayFavos/${userId}/${bookmarkId}/`);
@@ -74,8 +76,8 @@ const BookmarkSidebar = ( {isOpen,onClose,averageRank,folderRanks }) => {
     setAverageRanksByBId(newAverageRanks);
   }, [folderRanks]);
   return (
-<div  ref={sidebarRef} className={`  fixed top-[30px]  bookmark-sidebar right-[1px]
- lg:w-[17%] w-full  z-[100]   ${isOpen ? 'open' : 'closed'}`}  >
+<div  ref={sidebarRef} className={` fixed top-[30px]  bookmark-sidebar right-[1px]  bg-white
+ md:w-[35%]  lg:w-[20%]   z-[100]   ${isOpen ? 'open ' : 'closed'}`}  >
       <div className=" relative w-full p-4 bg-white   sidebar-animation">
         <div className="search-container relative mt-3">
           <input

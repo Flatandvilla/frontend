@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import sanitizeHtml from 'sanitize-html';
 
 const ContentKeyword = ({ selectedKeyword, textContent, count }) => {
+  console.log(count)
   const [highlightedContent, setHighlightedContent] = useState("");
   const [textDirection, setTextDirection] = useState("ltr");
 
@@ -45,7 +46,8 @@ const ContentKeyword = ({ selectedKeyword, textContent, count }) => {
   return (
     <div className={`mx-auto lg:w-[60%] md:w-full mt-[1rem] lg:mt-[0rem]`}>
       <div className={`sticky top-0 bg-blue-400 px-3 w-full`}>
-        <h1 className={`bg-blue py-[13.5px] px-2 font-semibold text-white mb-[10px] text-center mx-auto`}>
+        <h1 className={`bg-blue py-[13.5px] px-2 font-semibold 
+        text-white mb-[10px] text-center mx-auto`}>
           Content for Keyword: {count}
         </h1>
       </div>

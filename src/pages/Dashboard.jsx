@@ -5,7 +5,7 @@ import DataTableComponent from '../components/DataTable';
 const Dashboard = () => {
 
   return (
-    <div className=' w-full min-h-screen mx-auto pt-0 '>
+    <div className=' w-full min-h-screen mx-auto pt-0 dark:bg-gray-400 '>
       <DataTableComponent  />
     </div>
   );

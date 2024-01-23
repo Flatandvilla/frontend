@@ -1,31 +1,25 @@
-import React, { useEffect, useRef } from 'react';
+import React, {  useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { sidebarLinks as data } from '../static';
 import logo from '../assets/logo/flatandvilla-app-icon.png'
 import { GiHamburgerMenu} from 'react-icons/gi';
 import useOutsideClick from '../hook/useOutsideClick';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 const Sidebar = ({ toggle, show }) => {
   const location = useLocation();
   const sidebarRef = useRef();
-const handleLog=()=>{
-  console.log("hh")
-}
+
   useOutsideClick(sidebarRef, () => {
     if (show) {
       toggle();
     }
   });
 
-  useEffect(() => {
-    AOS.init({ duration: 1000 }); // Initialize AOS
-  }, []);
+ 
   return (
  
   <div 
   ref={sidebarRef}
-   className={`min-h-screen z-[100] bg-white shadowsidebar transition-all ease-in-out duration-300
+   className={`min-h-screen z-[100] bg-white shadowsidebar transition-all ease-in-out duration-300 dark:bg-slate
     ${show ? 'w-full md:w-64  fixed top-0 left-0  ' : ' md:block fixed '}`}>
 
 

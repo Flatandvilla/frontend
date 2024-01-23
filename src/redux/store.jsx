@@ -14,7 +14,8 @@ import SidebarSlice from './lib/SidebarSlice';
 import ModalSlice from './lib/modalSlice';
 import UrlSlice from './lib/urlSearch';
 import querySlice from './lib/querySlice'
-import keywordsingleSlice from './lib/singlekeyword'
+import keywordsingleSlice from './lib/singlekeyword';
+import dataSlice from "./lib/dataSlice";
 const rootReducer = combineReducers({
   authSlice,
   tableSlice,
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
   UrlSlice,
   querySlice,
   keywordsingleSlice,
+  dataSlice
 });
 
 

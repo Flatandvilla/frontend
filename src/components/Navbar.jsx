@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { HiMenuAlt1 } from 'react-icons/hi';
 import { MdClose } from 'react-icons/md';
 import Profile from './Profile';
@@ -6,18 +5,16 @@ import { IoMdList } from "react-icons/io";
 import { useDispatch } from 'react-redux';
 import { toggle_Bookmark } from '../redux/lib/SidebarSlice';
 import { useSelector } from 'react-redux';
-import { openModall } from '../redux/lib/modalSlice';
+//  import DarkModeToggle from './DarkMode/DarkModeToggle';
 
 const Navbar = ({ toggle, show   }) => {
   const dispatch = useDispatch();
-
-  
   const isSidebarOpen = useSelector((state) => state.SidebarSlice.isOpen);
 
 
   return (
     <div className="h-16 flex items-center
-     justify-between px-10 bg-white shadow-md fixed inset-0 p-0">
+     justify-between px-10 bg-white shadow-md fixed inset-0 p-0 dark:bg-slate">
     {/* Welcome message */}
     <div className="flex items-center ">
 
@@ -45,13 +42,17 @@ const Navbar = ({ toggle, show   }) => {
       className='mr-4 text-blue '
       style={{cursor:'pointer'}}>
       {isSidebarOpen ? <IoMdList size={25} /> : <IoMdList size={25} />}
+
     </div>
+
 <div>
   
 
 </div>
 
-    <div>
+
+    <div className='flex space-x-4'>
+    {/* <DarkModeToggle/> */}
       <Profile />
     </div>
   </div>

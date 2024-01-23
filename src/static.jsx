@@ -19,39 +19,39 @@ export const sidebarLinks = [
   {
     id:2,
     name:'keyword Research',
-    path:'/keywordresearch',
+    path:'/search',
     icon: <AiOutlineBarChart />
   },
-  {
-    id:3,
-    name:'Invoice',
-    path:'/invoice',
-    icon: <TbFileInvoice />
-  },
-  {
-    id:4,
-    name:'Schedule',
-    path:'/schedule',
-    icon: <BsCalendarDate />
-  },
-  {
-    id:5,
-    name:'Calender',
-    path:'/calender',
-    icon: <BsCalendar2Check />
-  },
-  {
-    id:6,
-    name:'Messages',
-    path:'/messages',
-    icon: <BiMessageDetail/>
-  },
-  {
-    id:7,
-    name:'Notifcation',
-    path:'/notifcation',
-    icon: <BiBell />
-  },
+  // {
+  //   id:3,
+  //   name:'Invoice',
+  //   path:'/invoice',
+  //   icon: <TbFileInvoice />
+  // },
+  // {
+  //   id:4,
+  //   name:'Schedule',
+  //   path:'/schedule',
+  //   icon: <BsCalendarDate />
+  // },
+  // {
+  //   id:5,
+  //   name:'Calender',
+  //   path:'/calender',
+  //   icon: <BsCalendar2Check />
+  // },
+  // {
+  //   id:6,
+  //   name:'Messages',
+  //   path:'/messages',
+  //   icon: <BiMessageDetail/>
+  // },
+  // {
+  //   id:7,
+  //   name:'Notifcation',
+  //   path:'/notifcation',
+  //   icon: <BiBell />
+  // },
   {
     id:8,
     name:'Settings',

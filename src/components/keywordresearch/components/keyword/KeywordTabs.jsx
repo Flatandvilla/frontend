@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from "react";
 import {
   Tabs,
@@ -12,17 +10,9 @@ import { useSelector } from "react-redux";
 import ContentKeyword from "./ContentKeyword";
 import AltQuery from "./AltQuery";
 import CaptionQuery from "./CaptionQuery";
-import KeywordtableQuery from "./KeywordtableQuery";
 import  { CheckboxCustomIcon } from "../../../Checkbox";
-
+import KeywordtableQuery from "./KeywordtableQuery"
   const KeywordTabs = () => {
-
-  const keywordData = useSelector((state) => state.querySlice.data);
-  const [selectedKeyword, setSelectedKeyword] = useState('');
-  const [selectedTabResultsSample, setSelectedTabResultsSample] = useState([]);
-  const [selectedTabAltSample, setSelectedTabAltSample] = useState([]);
-  const [selectedTabTextContent, setSelectedTabTextContent] = useState([]);
-  const [selectedCount, setSelectedCount] = useState(0); // Add this state
 
   const [selectedTabsData, setSelectedTabsData] = useState([]);
 
@@ -30,7 +20,7 @@ import  { CheckboxCustomIcon } from "../../../Checkbox";
     if (isChecked) {
       // Find and add the tab's data
       const tabData = keywordData.find(item => extractNameFromUrl(item.url) === tabName);
-      console.log(tabData)
+    
       if (tabData) {
         setSelectedTabsData(prev => [...prev, { tabName, data: tabData }]);
       }
@@ -39,11 +29,18 @@ import  { CheckboxCustomIcon } from "../../../Checkbox";
       setSelectedTabsData(prev => prev.filter(item => item.tabName !== tabName));
     }
   };
-  // useEffect(() => {
-  //   onSelectionChange(selectedTabsData);
-  // }, [selectedTabsData, onSelectionChange]);
 
-  
+  const keywordData = useSelector((state) => state.querySlice.data);
+  console.log(keywordData);
+  const [selectedKeyword, setSelectedKeyword] = useState('');
+  const [selectedTabResultsSample, setSelectedTabResultsSample] = useState([]);
+  const [selectedTabAltSample, setSelectedTabAltSample] = useState([]);
+  const [selectedTabTextContent, setSelectedTabTextContent] = useState([]);
+  const [selectedCaptiontext, setSelectedCaptionText] = useState([]);
+
+  const [selectedCount, setSelectedCount] = useState(0); // Add this state
+
+
   const extractNameFromUrl = (url) => {
     return url.replace(/^https?:\/\/(www\.)?/, '').replace(/\..+$/, '');
   };
@@ -59,11 +56,6 @@ import  { CheckboxCustomIcon } from "../../../Checkbox";
   };
 
   const uniqueTabNames = generateUniqueTabNames(keywordData);
-  // useEffect(() => {
-  //   console.log("Selected Keyword:", selectedKeyword);
-  // }, [selectedKeyword]);
-
-
 
   const initialActiveTab = keywordData && keywordData.length > 0
     ? extractNameFromUrl(keywordData[0].url)
@@ -74,12 +66,15 @@ import  { CheckboxCustomIcon } from "../../../Checkbox";
   useEffect(() => {
     if (keywordData && keywordData.length > 0) {
       const firstTabData = keywordData[0];
+      console.log(firstTabData)
       setSelectedTabResultsSample(firstTabData.results_sample);
       setSelectedTabAltSample(firstTabData.alt_sample);
       setSelectedTabTextContent(firstTabData.text_content);
-      setSelectedCount(firstTabData.count); 
+      setSelectedCaptionText(firstTabData.captions_text)
 
-      console.log(firstTabData.text_content)
+      setSelectedCount(firstTabData.count); 
+      console.log(firstTabData.count)
+
     }
   }, [keywordData]); // 
 
@@ -91,13 +86,24 @@ import  { CheckboxCustomIcon } from "../../../Checkbox";
       (item) => extractNameFromUrl(item.url) === keyword
     );
   
+    // if (selectedKeywordData) {
+    //   setSelectedTabResultsSample(selectedKeywordData.results_sample);
+    //   setSelectedTabAltSample(selectedKeywordData.alt_sample);
+    //   setSelectedTabTextContent(selectedKeywordData.text_content);
+    //   setSelectedCount(selectedKeywordData.count); 
+    //   setSelectedCount(selectedKeywordData.captions_text); 
+
+    //   // Update the count
+    // }
     if (selectedKeywordData) {
       setSelectedTabResultsSample(selectedKeywordData.results_sample);
       setSelectedTabAltSample(selectedKeywordData.alt_sample);
       setSelectedTabTextContent(selectedKeywordData.text_content);
       setSelectedCount(selectedKeywordData.count); 
-      // Update the count
+      setSelectedCaptionText(selectedKeywordData.captions_text);
+       // Corrected line
     }
+    
   };
   
 
@@ -108,13 +114,16 @@ import  { CheckboxCustomIcon } from "../../../Checkbox";
   return (
     <>
       <Tabs value={activeTab} 
-      className="max-w-screen-xl mx-auto mt-[30px]  capitalize ">
+      className="max-w-screen-xl mx-auto mt-[30px] 
+       capitalize mt-[50px] z-[100]">
+       
         <TabsHeader
-          className="rounded-none border-b border-blue-gray-50 
-          bg-transparent p-0 max-w-screen-lg mx-auto"
+          className="rounded-none border-b 
+          border-blue-gray-50 
+          bg-transparent p-0 max-w-screen-lg mx-auto z-10"
           indicatorProps={{
             className:
-              "bg-transparent border-b-2 border-blue shadow-none rounded-none ",
+              "bg-transparent border-b-2   border-blue shadow-none rounded-none ",
           }}
         >
           
@@ -130,14 +139,14 @@ import  { CheckboxCustomIcon } from "../../../Checkbox";
           >
        <div className="flex items-center space-around ">
        <div>
-       <CheckboxCustomIcon
+       {/* <CheckboxCustomIcon
   checked={selectedTabsData.some(tabData => tabData.tabName === uniqueTabNames[index])}
   onChange={(e) => handleCheckboxChange(uniqueTabNames[index], e.target.checked)}
-/>
+/> */}
+
         </div>
         <div>
         {uniqueTabNames[index]}
-
         </div>
        </div>
           </Tab>
@@ -146,14 +155,9 @@ import  { CheckboxCustomIcon } from "../../../Checkbox";
         </TabsHeader>
         <TabsBody>
           {keywordData.map((item,index) => (
-            // <TabPanel key={item.url}
-
-            //   value={extractNameFromUrl(item.url)}>
+          
             <TabPanel key={item.url} value={uniqueTabNames[index]}>
-              {/* <div
-                className={`mx-auto bg-white h-screen 
-    transition-all mt-[4rem] 
-       max-w-screen-2xl inset-0 duration-300 ease-in-out `}> */}
+             
 
                 <div className="flex md:justify-between 
        space-x-[30px] mt-[2rem]
@@ -188,7 +192,7 @@ import  { CheckboxCustomIcon } from "../../../Checkbox";
                 />
 
                 <CaptionQuery
-                 textContent={selectedTabTextContent} />
+                 textContent={selectedCaptiontext} />
               </div>
 
 

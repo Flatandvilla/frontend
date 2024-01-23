@@ -134,7 +134,7 @@ const RegistrationForm = () => {
     
      Already have an account {" "}? 
     <span className="text-blue cursor-pointer">
-      <Link to="/login"> Login </Link>
+      <Link to="/login"> Login In </Link>
     </span>
   </p>
 </div>

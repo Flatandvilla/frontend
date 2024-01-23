@@ -3,8 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import BookmarkItem from './BookmarkItem';
 import { fetchBookmarks } from '../../redux/lib/displayBookmarks';
 import { createBookmark } from '../../redux/lib/createGroup';
-import { IoCreateOutline } from "react-icons/io5";
-import { CiCirclePlus } from "react-icons/ci";
 import { FiPlus } from "react-icons/fi";
 import { toast } from 'react-toastify';
 
@@ -13,7 +11,6 @@ const BookmarkList = ({ bookmarks, searchBookmark, onBookmarkClick,averageRanksB
   const displayBookmarkSlice = useSelector((state) => state.displayBookmarkSlice.bookmarks);
   const [expandedBookmarkId, setExpandedBookmarkId] = useState(null);
   const [filteredBookmarks, setFilteredBookmarks] = useState([]);
-  const [draggedBookmarkId, setDraggedBookmarkId] = useState(null);
   const dispatch = useDispatch();
   const userId = useSelector((state) => state?.authSlice?.user?.id);
 
@@ -91,9 +88,10 @@ const BookmarkList = ({ bookmarks, searchBookmark, onBookmarkClick,averageRanksB
         console.error('Bookmark not found');
         return;
     }
+    const baseUrl = process.env.REACT_APP_BASE_URL;
 
     try {
-        const response = await fetch(`http://192.168.0.175:8002/api/bookmarks/delete/${userId}/${bookmarkId}/`, {
+        const response = await fetch(`${baseUrl}/bookmarks/delete/${userId}/${bookmarkId}/`, {
             method: 'DELETE',
         });
 
@@ -123,6 +121,7 @@ const handleRenameBookmark = async (bookmarkId, newName) => {
     return;
   }
   const oldName = bookmarkToRename.name;
+  const baseUrl = process.env.REACT_APP_BASE_URL;
 
   try {
     const response = await fetch(`http://192.168.0.175:8002/api/bookmarks/update/${userId}/${bookmarkId}/`, {

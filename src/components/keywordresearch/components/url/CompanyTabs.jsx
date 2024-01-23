@@ -7,6 +7,14 @@ const CompanyTabs = () => {
   const [selectedKeyword, setSelectedKeyword] = useState('');
   const urlData = useSelector(state => state.UrlSlice.data);
 
+  // Function to extract domain name from URL using regex
+  const extractDomainName = (url) => {
+    const regex = /^(?:https?:\/\/)?(?:www\.)?([^\/]+)/;
+    const match = url.match(regex);
+    const domain = match ? match[1] : null;
+    return domain ? domain.replace('.com', '') : null;
+  };
+
   const handleKeywordClick = (keyword) => {
     setSelectedKeyword(keyword);
   };
@@ -15,7 +23,7 @@ const CompanyTabs = () => {
     return <div>Loading...</div>;
   }
 
-
+  const domainName = extractDomainName(urlData.url);
 
   return (
     <>

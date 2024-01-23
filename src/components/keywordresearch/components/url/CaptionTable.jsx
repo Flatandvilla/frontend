@@ -8,7 +8,7 @@ const CaptionTable = () => {
   return (
     
     <div className="overflow-x-auto mx-auto 
-    lg:w-[80%] md:w-full md:mt-[1rem] text-center h-[400px] overflow-auto">
+    lg:w-[80%] md:w-full md:mt-[1rem] text-center  overflow-auto">
 
       <table className="min-w-full table-auto text-left">
         <thead className="bg-blue text-white">
