@@ -18,10 +18,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { keywordschema } from '../utils/validation';
 import { addKeyword } from '../redux/lib/keyword';
-import Modal from './keywordModal';
 import axios from 'axios';
-import { MdErrorOutline } from 'react-icons/md'; // Importing an exclamation mark icon
-import UpdateModal from './UpdateModal';
+import { FaDownload } from "react-icons/fa";
 import EGYPT from '../assets/images/EGYPT.png'
 import USA from '../assets/images/USA.png'
 import AE from '../assets/images/DUBAI.png'
@@ -32,6 +30,8 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useRef } from 'react';
 import { FaPlus } from 'react-icons/fa'; // Importing an icon
 import TabsCustomAnimation from '../components/Tabs/queryTabs';
+import * as XLSX from 'xlsx';
+import { FaUpload } from "react-icons/fa";
 
 import { addsingleKeyword } from '../redux/lib/singlekeyword';
 const DataTableComponent = () => {
@@ -59,6 +59,15 @@ const DataTableComponent = () => {
   const [open, setOpen] = useState(true);
   const cancelButtonRef = useRef(null);
   const [isHovering, setIsHovering] = useState(false);
+  
+  const [isHover, setIsHover] = useState(false);
+  const [is_Hover_, set_Is_Hover] = useState(false);
+  const handle_Mouse_Enter = () => set_Is_Hover(true);
+  const handle_Mouse_Leave = () => set_Is_Hover(false);
+
+  const handleMouse_Enter = () => setIsHover(true);
+  const handleMouse_Leave = () => setIsHover(false);
+
   const handleMouseEnter = () => setIsHovering(true);
   const handleMouseLeave = () => setIsHovering(false);
 
@@ -125,58 +134,34 @@ const DataTableComponent = () => {
   const handleLocationChange = (selectedOption) => {
     setSelectedLocation(selectedOption);
   };
-  // const updateFilteredData = () => {
-  //   let filteredResult = [...tableData];
+ 
+  const fetchDataFromApi = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/userRankExcel/${userId}/`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('There has been a problem with your fetch operation:', error);
+      toast.error(error)
+    }
+  };
 
-  //   // If a search query is present, filter the results based on the search query
-  //   if (searchQuery) {
-  //     const queryRegex = new RegExp(searchQuery, 'i');
-  //     filteredResult = filteredResult.filter(
-  //       (item) => item.query.match(queryRegex) || item.query.includes(searchQuery)
-  //     );
-  //   }
-
-  //   // If target URLs are selected, filter the results based on target URLs
-  //   if (selectedTargetUrls.length > 0 && !selectedTargetUrls.includes('All Sources')) {
-  //     filteredResult = filteredResult.filter((item) =>
-  //       selectedTargetUrls.includes(
-  //         item.target_url.replace(/^(https?:\/\/)?(www\.)?/, '').replace(/\/$/, '')
-  //       )
-  //     );
-  //   }
-
-  //   // If a location filter is selected, filter the results based on location
-  //   if (selectedLocationFilter !== 'All Locations') {
-  //     filteredResult = filteredResult.filter((item) =>
-  //       item.google_domain === selectedLocationFilter
-  //     );
-  //   }
-
-  //   // Sort the array in descending order based on the date
-  //   filteredResult.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-  //   // Set the filtered data to the state
-
-
-  //   if (filteredData.length === 0) {
-  //     console.log(filteredData.length)
-  //     // If there are no results after filtering, create a "no data" row
-  //     setFilteredData([{
-  //       query: "No data",
-  //       rank: "",
-  //       date: "",
-  //       target_url: "",
-  //       google_domain: "",
-  //       source_url: "",
-  //       // Any other fields should be empty or set to a default "no data" value
-  //     }]);
-  //   } else {
-  //     // If there are results, just set them as usual
-  //     setFilteredData(filteredResult);
-  //   }
-    
-
-  // };
+  
+  const exportToExcel = async () => {
+    try {
+      const data = await fetchDataFromApi(); // Fetch data from API
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+      XLSX.writeFile(workbook, 'ExportedData.xlsx');
+    } catch (error) {
+      console.error('Error exporting to Excel:', error);
+     
+    }
+  };
+  
   const updateFilteredData = () => {
     let filteredResult = [...tableData];
   
@@ -359,34 +344,8 @@ const DraggableRow = ({ item, children, ...props }) => {
       cell: row => row.noDataIndicator ? null : <div>{row.rank}</div>,
 
     },
-    // {
-    //   name: 'Best Rank',
-    //   sortable: true,
-    //   selector: (row) => row.best_rank,
-      
+   
     
-    // },
-    // {
-    //   name: 'Rank Difference',
-    //   sortable: true,
-    //   selector: (row) => row.rank_difference,
-      
-    
-    // },
-    // {
-    //   name: 'Date',
-    //   sortable: true,
-    //   minWidth: '15%',
-
-
-    //   selector: (row) => row.date,
-
-    //   cell: (row) => (
-    //     <div>
-    //       {format(new Date(row.date), 'MMMM dd, yyyy')}
-    //     </div>
-    //   ),
-    // },
     {
       name: 'Date',
       selector: row => row.date,
@@ -796,25 +755,7 @@ const showDroppedNotification = () => {
     //   navigate(-1);
     // }
   };
-  // const conditionalRowStyles = [
-  //   {
-  //     when: row => row.noDataIndicator,
-  //     style: {
-  //       display: 'table-cell',
-  //       textAlign: 'center',
-  //       // Assuming you have 6 columns, for example
-  //       '&:first-of-type': {
-  //         width: '100%',
-  //         position: 'absolute',
-  //         left: '50%',
-  //         transform: 'translateX(-50%)'
-  //       },
-  //       '&:not(:first-of-type)': {
-  //         display: 'none'
-  //       },
-  //     },
-  //   },
-  // ];
+
   const conditionalRowStyles = [
     {
       when: row => row.noDataIndicator,
@@ -833,6 +774,62 @@ const showDroppedNotification = () => {
     },
   ];
   
+
+  // const handleFileChange = async (e) => {
+  //   const file = e.target.files[0];
+
+  //   if (file) {
+  //     await uploadFile(file);
+  //   }
+  // };
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const workbook = XLSX.read(e.target.result, { type: 'binary' });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+        updateTableData(jsonData); // Update the table data
+      };
+      reader.readAsBinaryString(file);
+    } else {
+      toast.error('Please select an Excel file.');
+    }
+  };
+  const updateTableData = (jsonData) => {
+    setFilteredData(jsonData); // Assuming setFilteredData updates the state for your DataTable
+    toast.success('Data imported successfully!');
+  };
+  
+  
+  const uploadFile = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/upload/${userId}/`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (response.status === 200) {
+  
+        setFilteredData(response.data);
+        toast.success('Data imported successfully!');
+      } else {
+        toast.error('Failed to import data');
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      toast.error('Error uploading file');
+    }
+  };
+  const triggerFileInput = () => {
+    document.getElementById('excelFileInput').click();
+  };
   
   return (
     <>
@@ -856,6 +853,51 @@ const showDroppedNotification = () => {
           Add New Query
         </span>
       </div>
+
+
+      <div className="tooltip-container z-[1000]" 
+      onMouseEnter={handleMouse_Enter} onMouseLeave={handleMouse_Leave}>
+        <FaDownload 
+
+        
+          onClick={exportToExcel}
+
+          className="text-2xl bg-blue
+           text-white rounded-full 
+          p-[10px] fixed bottom-[100px] right-[20px]
+                   hover:bg-white hover:text-blue hover:border-2
+                    hover:border-blue hover:transition ease-in-out delay-30
+                   mt-[100px] cursor-pointer"
+          size={50}
+        />
+        <span className={`tooltip-text text-blue
+         bg-white shadow-md rounded-md p-3 fixed bottom-[100px] 
+         right-[76px] ${isHover ? 'block' : 'hidden'}`}>
+         Export Excel
+        </span>
+      </div>
+      <div className="tooltip-container z-[1000]" 
+      onMouseEnter={handle_Mouse_Enter} onMouseLeave={handle_Mouse_Leave}>
+      <FaUpload
+
+        onClick={triggerFileInput}
+        className="text-2xl bg-blue text-white rounded-full p-[10px] fixed bottom-[170px] right-[20px] hover:bg-white hover:text-blue hover:border-2 hover:border-blue hover:transition ease-in-out delay-30 mt-[100px] cursor-pointer"
+        size={50}
+      />
+      <span className={`tooltip-text text-blue bg-white shadow-md 
+      rounded-md p-3 fixed bottom-[170px] right-[76px] ${is_Hover_ ? 'block' : 'hidden'}`}>
+        Import excel
+      </span>
+      <input
+        type="file"
+        id="excelFileInput"
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+        accept=".xlsx, .xls"
+      />
+    </div>
+
+
       {isPopupVisible && (
       <Transition.Root   show={isModal_Open}
         as={Fragment}>
