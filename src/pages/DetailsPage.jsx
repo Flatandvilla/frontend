@@ -43,7 +43,8 @@ const handleIframeLoad = () => {
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filterType, setFilterType] = useState('day');
+  const [filterType, setFilterType] = useState('month');
+
   const [filteredData, setFilteredData] = useState([]);
   const dispatch = useDispatch(); 
 

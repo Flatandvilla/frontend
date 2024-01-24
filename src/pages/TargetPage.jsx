@@ -43,7 +43,7 @@ const handleRowClicked = (row) => {
   const [chartSeries, setChartSeries] = useState([]);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filterType, setFilterType] = useState('day');
+  const [filterType, setFilterType] = useState('month');
   const [filteredData, setFilteredData] = useState([]);
   const dispatch = useDispatch(); 
   const [showTabs, setShowTabs] = useState(false);

@@ -12,7 +12,7 @@ const TabsCustomAnimation = ({ rowData }) => {
     const [seriesData, setSeriesData] = useState([]);
     const [yAxisMin, setYAxisMin] = useState(0);
     const [yAxisMax, setYAxisMax] = useState(100);
-    const [timePeriod, setTimePeriod] = useState('day');
+    const [timePeriod, setTimePeriod] = useState('month');
 
     useEffect(() => {
         if (rowData) {
