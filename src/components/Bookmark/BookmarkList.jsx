@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import BookmarkItem from './BookmarkItem';
@@ -88,12 +89,12 @@ const BookmarkList = ({ bookmarks, searchBookmark, onBookmarkClick,averageRanksB
         console.error('Bookmark not found');
         return;
     }
-    const baseUrl = process.env.REACT_APP_BASE_URL;
 
+  
     try {
-        const response = await fetch(`${baseUrl}/bookmarks/delete/${userId}/${bookmarkId}/`, {
-            method: 'DELETE',
-        });
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/bookmarks/delete/${userId}/${bookmarkId}/`, {
+          method: 'DELETE',
+      });
 
         if (!response.ok) {
             throw new Error('Error deleting bookmark');

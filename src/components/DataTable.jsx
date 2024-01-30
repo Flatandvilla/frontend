@@ -9,9 +9,8 @@ import { fetchData } from '../redux/lib/fetchData';
 import { FiSearch } from 'react-icons/fi';
 import { format } from 'date-fns';
 import ClipLoader from "react-spinners/ClipLoader";
-import { MdDeleteOutline } from "react-icons/md";
 import { ImSpinner11 } from "react-icons/im";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { deleteRank } from '../redux/lib/deleteRow'
 import { useForm, Controller } from 'react-hook-form';
@@ -32,22 +31,33 @@ import { FaPlus } from 'react-icons/fa'; // Importing an icon
 import TabsCustomAnimation from '../components/Tabs/queryTabs';
 import * as XLSX from 'xlsx';
 import { FaUpload } from "react-icons/fa";
+import { BiDotsVertical } from "react-icons/bi";
+import { FaTrash } from "react-icons/fa";
+import { FaArrowsToEye } from "react-icons/fa6";
+import { Menu } from '@headlessui/react';
+
+
 
 import { addsingleKeyword } from '../redux/lib/singlekeyword';
 const DataTableComponent = () => {
+  const [menuOpen, setMenuOpen] = useState(true);
+
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [isDataLoading, setIsDataLoading] = useState(false);
-
+  const [activeAccordion, setActiveAccordion] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState(false);
+  const toggleDropdown = (query_id) => {
+    setActiveDropdown(activeDropdown === query_id ? null : query_id);
+  };
+const navigate=useNavigate();
   const [selectedRow, setSelectedRow] = useState(null);
   const [folderRanks, setFolderRanks] = useState({});
   const [averageRank, setAverageRank] = useState( ); 
   const [isPopupVisible, setIsPopupVisible] = useState(true);
 
    const tabsRef = useRef(null);
-  const handleRowClicked = row => {
-    setSelectedRow(row);
-    scrollToTabs();
-  };
+
   const scrollToTabs = () => {
     if (tabsRef.current) {
       tabsRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -81,8 +91,6 @@ const DataTableComponent = () => {
   const isSidebarOpen = useSelector((state) => state.SidebarSlice.isOpen);
   const [draggedItem, setDraggedItem] = useState(null);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-  const [updatedData, setUpdatedData] = useState(null);
-  const [modalData, setModalData] = useState({ rank: '', targetUrl: '', query: '', });
   const [selectedLocation, setSelectedLocation] = useState({
     value: 'EG',
     label: 'Egypt',
@@ -94,11 +102,12 @@ const DataTableComponent = () => {
 
   const [isAdding, setIsAdding] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-  const userId = useSelector(state => state?.authSlice?.id)
+  const userId = useSelector(state => state?.authSlice?.id);
+ 
   const dispatch = useDispatch();
   const tableData = useSelector((state) => state.tableSlice.data);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTargetUrls, setSelectedTargetUrls] = useState([]);
+  const [selectedTargetUrl, setSelectedTargetUrl] = useState('All Sources'); 
   const [loading, setLoading] = useState(true);
   const animatedComponents = makeAnimated();
   const [dataFetched, setDataFetched] = useState(false);
@@ -162,50 +171,96 @@ const DataTableComponent = () => {
     }
   };
   
-  const updateFilteredData = () => {
-    let filteredResult = [...tableData];
+//   const updateFilteredData = () => {
+//     let filteredResult = [...tableData];
   
-    // If a search query is present, filter the results based on the search query
-    if (searchQuery) {
-      const queryRegex = new RegExp(searchQuery, 'i');
-      filteredResult = filteredResult.filter(
-        (item) => item.query.match(queryRegex) || item.query.includes(searchQuery)
-      );
-    }
+//     // If a search query is present, filter the results based on the search query
+//     // if (searchQuery) {
+//     //   const queryRegex = new RegExp(searchQuery, 'i');
+//     //   filteredResult = filteredResult.filter(
+//     //     (item) => item.query.match(queryRegex) || item.query.includes(searchQuery)
+//     //   );
+//     // }
+//     if (searchQuery) {
+//       const queryRegex = new RegExp(searchQuery, 'i');
+//       filteredResult = filteredResult.filter(
+//         (item) => item.query.match(queryRegex) || item.query.includes(searchQuery)
+//       );
+//     }
+//     // // If target URLs are selected, filter the results based on target URLs
+//     // if (selectedTargetUrls.length > 0 && !selectedTargetUrls.includes('All Sources')) {
+//     //   filteredResult = filteredResult.filter((item) =>
+//     //     selectedTargetUrls.includes(
+//     //       item.target_url.replace(/^(https?:\/\/)?(www\.)?/, '').replace(/\/$/, '')
+//     //     )
+//     //   );
+//     // }
+//   // If a target URL is selected, filter the results based on the target URL
+// if (selectedTargetUrl) {
+//   filteredResult = filteredResult.filter((item) =>
+//     item.target_url.replace(/^(https?:\/\/)?(www\.)?/, '').replace(/\/$/, '') === selectedTargetUrl
+//   );
+// }
+
+//     // If a location filter is selected, filter the results based on location
+//     if (selectedLocationFilter !== 'All Locations') {
+//       filteredResult = filteredResult.filter((item) =>
+//         item.google_domain === selectedLocationFilter
+//       );
+//     }
   
-    // If target URLs are selected, filter the results based on target URLs
-    if (selectedTargetUrls.length > 0 && !selectedTargetUrls.includes('All Sources')) {
-      filteredResult = filteredResult.filter((item) =>
-        selectedTargetUrls.includes(
-          item.target_url.replace(/^(https?:\/\/)?(www\.)?/, '').replace(/\/$/, '')
-        )
-      );
-    }
+//     // Sort the array in descending order based on the date
+//     filteredResult.sort((a, b) => new Date(b.date) - new Date(a.date));
   
-    // If a location filter is selected, filter the results based on location
-    if (selectedLocationFilter !== 'All Locations') {
-      filteredResult = filteredResult.filter((item) =>
-        item.google_domain === selectedLocationFilter
-      );
-    }
-  
-    // Sort the array in descending order based on the date
-    filteredResult.sort((a, b) => new Date(b.date) - new Date(a.date));
-  
-    // Check if the filtered results array is empty after all filters are applied
+//     // Check if the filtered results array is empty after all filters are applied
    
 
-    if (filteredResult.length === 0) {
-      // If there are no results, create a special entry in your data array
-      setFilteredData([{ noDataIndicator: true }]);
-    } else {
-      setFilteredData(filteredResult);
-    }
-  };
-  
+//     if (filteredResult.length === 0) {
+//       // If there are no results, create a special entry in your data array
+//       setFilteredData([{ noDataIndicator: true }]);
+//     } else {
+//       setFilteredData(filteredResult);
+//     }
+//   };
+const updateFilteredData = () => {
+  let filteredResult = [...tableData];
+
+  // Apply search query filter
+  if (searchQuery) {
+    const queryRegex = new RegExp(searchQuery, 'i');
+    filteredResult = filteredResult.filter(
+      (item) => item.query.match(queryRegex) || item.query.includes(searchQuery)
+    );
+  }
+
+  // Apply target URL filter only if a specific URL is selected (and not "All Sources")
+  if (selectedTargetUrl && selectedTargetUrl !== 'All Sources') {
+    filteredResult = filteredResult.filter((item) =>
+      item.target_url.replace(/^(https?:\/\/)?(www\.)?/, '').replace(/\/$/, '') === selectedTargetUrl
+    );
+  }
+
+  // Apply location filter
+  if (selectedLocationFilter !== 'All Locations') {
+    filteredResult = filteredResult.filter((item) =>
+      item.google_domain === selectedLocationFilter
+    );
+  }
+
+  // Sort the array in descending order based on the date
+  filteredResult.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  // Check if the filtered results array is empty after all filters are applied
+  if (filteredResult.length === 0) {
+    setFilteredData([{ noDataIndicator: true }]);
+  } else {
+    setFilteredData(filteredResult);
+  }
+};
+
   useEffect(() => {
     updateFilteredData();
-  }, [searchQuery, selectedTargetUrls, selectedLocationFilter, tableData]);
+  }, [searchQuery, selectedTargetUrl, selectedLocationFilter, tableData]);
 
   const NoDataComponent = () => (
     <div className="text-center" style={{ padding: '20px', gridColumn: '1 / -1' }}>
@@ -218,7 +273,7 @@ const DataTableComponent = () => {
   useEffect(() => {
     if (!dataFetched) {
       setLoading(true);
-      dispatch(fetchData(selectedTargetUrls))
+      dispatch(fetchData(selectedTargetUrl))
         .then(() => {
           setLoading(false);
           setDataFetched(true);
@@ -228,13 +283,13 @@ const DataTableComponent = () => {
           setLoading(false);
         });
     }
-  }, [dataFetched, dispatch, selectedTargetUrls]);
+  }, [dataFetched, dispatch, selectedTargetUrl]);
   useEffect(() => {
     setFilteredData(tableData);
   }, [tableData]);
   useEffect(() => {
     updateFilteredData();
-  }, [searchQuery, selectedTargetUrls, tableData]);
+  }, [searchQuery, selectedTargetUrl, tableData]);
 
   const uniqueTargetUrls = [
     'All Sources',
@@ -314,13 +369,43 @@ const DraggableRow = ({ item, children, ...props }) => {
       </div>
     );
   };
+
+
+
+
+ 
+  const renderAccordionContent = (row) => {
+    // Render TabsCustomAnimation with the row data
+    return (
+      <div className="p-4">
+        <TabsCustomAnimation rowData={row} />
+      </div>
+    );
+  };
+  const handleRowClicked = row => {
+    // Toggle accordion for the clicked row
+    setActiveAccordion(activeAccordion === row.query_id ? null : row.query_id);
+  };
+
+  
+  useEffect(() => {
+    // Select the first header element in the DataTable and change its text
+    const firstHeader = document.querySelector(".rdt_TableHeadRow div");
+    if (firstHeader) {
+      firstHeader.innerText = "Details";
+    }
+  }, []); 
+
+  const navigateToDetails = (userId, query, targetUrl, google_domain) => {
+    const path = `/details/${userId}/${encodeURIComponent(query)}/${encodeURIComponent(targetUrl)}/${google_domain}/`;
+    console.log('Navigating to path:', path);
+    navigate(path);
+};
   const columns = [
-  
+
     {
-      
-  
       name: 'keywords',
-      minWidth: '17%',
+      maxWidth: '20%',
 
       sortable: true,
       selector: (row) => row.query,
@@ -337,7 +422,7 @@ const DraggableRow = ({ item, children, ...props }) => {
 
     {
       name: 'Rank',
-      minWidth: '5%',
+      maxWidth: '5%',
 
       sortable: true,
       selector: (row) => row.rank,
@@ -348,98 +433,25 @@ const DraggableRow = ({ item, children, ...props }) => {
     
     {
       name: 'Date',
+      maxWidth: '20%',
+
       selector: row => row.date,
       cell: row => row.noDataIndicator ? null : <div>{format(new Date(row.date), 'MMMM dd, yyyy')}</div>,
+
     },
-    // {
-    //   name: 'Target URL',
-    //   selector: (row) => row.target_url,
-      // cell: (row) => (
-      //   <div 
-         
-      //  className='cursor-pointer font-semibold'
-      //   >
-      //   <Link to={`/targets/${userId}/${encodeURIComponent(row.target_url)}/`}>
+  
+   
 
-      //     {row.target_url.replace(/^(https?:\/\/)?(www\.)?/, '').replace(/\/$/, '')}
-      //  </Link>
-      //   </div>
-      // ),
-    // },
-    {
-      name: 'Target URL',
-      selector: row => row.target_url,
-      cell: row => {
-        // Using optional chaining to safely access and manipulate target_url
-        return (
-          <div  className='cursor-pointer font-semibold'>
-          <Link to={`/targets/${userId}/${encodeURIComponent(row.target_url)}/`}>
-
-          {row.target_url?.replace(/^(https?:\/\/)?(www\.)?/, '').replace(/\/$/, '') ||"No data found"}
-          </Link>
-       
-        
-        
-        </div>
-        )
-      },
-    },
-
-    {
-      name: 'Actions',
-      sortable: true,
-
-      cell: (row, rowIndex) => row.noDataIndicator ? null : (
-       
-             <>
-            
-        <div className='flex  items-center justify-center mx-auto '>
-         
-         <button
-        onClick={() => handleUpdateButtonClick(row.query_id, row.query, row.target_url, row.google_domain)}
-        className={`text-green-500 px-2 py-1 rounded-lg border border-green-500 ${updatingRows[row.query_id] ? 'cursor-not-allowed border-transparent' : ''}`}
-        style={{ width: '27px', height: '21px' }}
-      >
-        {updatingRows[row.query_id] ? (
-          <ClipLoader size={14} color={'green'} loading={true} />
-        ) : (
-          <ImSpinner11 />
-        )}
-      </button>
-
-
-
-          <button
-            onClick={() => handleDeleteButtonClick(row.query_id)}
-            className="text-red-500 px-2 py-1 rounded-lg border border-red-500 ml-2"
-            style={{ width: '27px', height: '21px' }}
-
-          >
-            <MdDeleteOutline />
-          </button>
-
-          <button className="text-slate-500 px-2 py-1 rounded-lg border border-blue ml-2" 
-                        style={{ width: '27px', height: '21px' }}
-                        >
-            <Link to={`/details/${userId}/${encodeURIComponent(row.query)}/${encodeURIComponent(row.target_url)}/${row.google_domain}/`}>
-              <FaEye className="text-blue hover:text-blue-600" />
-            </Link>
-            
-
-          </button>
-        </div>
-        </>
-      ),
-    }
-    ,
+   
+    
     {
       name: 'Location',
       sortable: true,
-      minWidth: '10%',
+      maxWidth: '20%',
 
       selector: (row) => row.google_domain,
       cell: (row) => (
-        <div className="flex  mx-auto">
+        <div className="flex items-center justify-center ">
           {row.google_domain === 'US' && (
             <img className="w-6" src={USA} alt="USA" title="United States" />
           )}
@@ -452,18 +464,138 @@ const DraggableRow = ({ item, children, ...props }) => {
         </div>
       ),
     },
-    {
-      name: 'Origin',
-      sortable: true,
-      cell: (row) => row.noDataIndicator ? null : (
-
-        <a href={row.source_url} target="_blank"
-           rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>
-          View Source
-        </a>
-      ),
-  },
   
+ 
+  {
+    name: 'Origin',
+    sortable: true,
+    cell: (row) => {
+      if (row.noDataIndicator) {
+        return null;
+      }
+  
+      // Regular expression to find the domain extension and extract everything after it
+      const regex = /\.(com|eg|net|ru|org|au|sa|uk|de)(\/.*)?$/;
+      const matches = row.source_url.match(regex);
+      const urlAfterDomain = matches && matches[2] ? decodeURIComponent(matches[2]) : '';
+  
+      // Shorten the URL for display
+      const displayUrl = urlAfterDomain.length > 20 ? `${urlAfterDomain.substring(0, 20)}...` : urlAfterDomain;
+  
+      return (
+        <div className="tooltip-container">
+          <a href={row.source_url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>
+            {displayUrl}
+          </a>
+          <span className="tooltip-text">{urlAfterDomain}</span>
+        </div>
+      );
+    },
+  },
+   
+  
+
+  {
+    name: 'Actions',
+    sortable: true,
+    maxWidth: '5%',
+    cell: (row, rowIndex) => {
+      if (row.noDataIndicator) {
+        return 'No data Found';
+      }
+
+      return (
+        <Menu as="div" className="px-[10px] pt-[10px] relative inline-block text-left 
+        hover:bg-gray-300  p-1 rounded-full transition-all duration-300 ease-in-out " onClick={() => toggleDropdown(row.query_id)}>
+        <Menu.Button >
+          <BiDotsVertical  size={18} className='cursor-pointer ' />
+        </Menu.Button>
+
+       
+ 
+          <Transition
+            as={Fragment}
+            enter="transition ease-out duration-100"
+            enterFrom="transform opacity-0 scale-95"
+            enterTo="transform opacity-100 scale-100"
+            leave="transition ease-in duration-75"
+            leaveFrom="transform opacity-100 scale-100"
+            leaveTo="transform opacity-0 scale-95"
+          >
+            <Menu.Items className="absolute right-[20px] 
+    z-10 top-[0px] m-[1rem] p-[0.5rem]  w-[90px] bg-white rounded-lg shadowmenu">
+              {/* Update Button */}
+              <Menu.Item>
+                {({ active }) => (
+                     <div className='flex   mt-[5px] justify-around'>
+
+                  <button
+                    onClick={() => handleUpdateButtonClick(row.query_id, row.query, row.target_url, row.google_domain)}
+                className={`text-green-500  rounded-lg flex items-center  justify-around  ${updatingRows[row.query_id] ? 'cursor-not-allowed' : ''}`}
+                  >
+                    {updatingRows[row.query_id] ? (
+                      <ClipLoader size={14} color={'green'} loading={true} />
+                    ) : (
+                      <ImSpinner11 />
+                    )}
+                                       <span className=' ml-[5px]  text-md'>  Update</span>
+
+                  </button>
+
+                  </div>
+                )}
+              </Menu.Item>
+
+              {/* Delete Button */}
+              <Menu.Item>
+                {({ active }) => (
+                     <div className='flex   mt-[5px] justify-around'>
+
+                  
+                  <button
+                    onClick={() => handleDeleteButtonClick(row.query_id)}
+                    className="text-red-500  rounded-lg flex items-center  justify-around "
+                  >
+                    <FaTrash />
+                    <span className=' ml-[5px]  text-md'>  Delete</span>
+
+                  </button>
+
+                  </div>
+                )}
+              </Menu.Item>
+
+              {/* View Button */}
+              <Menu.Item>
+                {({ active }) => (
+                                       <div className='flex   mt-[5px] justify-around'>
+
+                  {/* <button
+                    onClick={() => navigateToDetails(row.userId, row.query, row.target_url, row.google_domain)}
+                    className='text-slate-500  rounded-lg flex items-center'
+                  >
+                    <FaArrowsToEye className="text-blue hover:text-blue-600" />
+                    <span className=' text-md  ml-[5px]'>    View &nbsp;</span>
+
+                  </button> */}
+                   <button
+        onClick={() => navigateToDetails(row.query, row.target_url, row.google_domain)}
+        className='text-slate-500 rounded-lg flex items-center'
+      >
+        <FaArrowsToEye className="text-blue hover:text-blue-600" />
+        <span className=' text-md ml-[5px]'>View</span>
+      </button>
+                
+
+</div>
+                )}
+              </Menu.Item>
+            </Menu.Items>
+          </Transition>
+        </Menu>
+      );
+    },
+  },
 
   ];
 
@@ -471,10 +603,14 @@ const DraggableRow = ({ item, children, ...props }) => {
     const query = e.target.value;
     setSearchQuery(query);
   };
-  const handleTargetUrlFilterChange = (selectedOptions) => {
-    const selectedUrls = selectedOptions.map((option) => option.value);
-    setSelectedTargetUrls(selectedUrls);
+  // const handleTargetUrlFilterChange = (selectedOptions) => {
+  //   const selectedUrls = selectedOptions.map((option) => option.value);
+  //   setSelectedTargetUrls(selectedUrls);
+  // };
+  const handleTargetUrlFilterChange = (selectedOption) => {
+    setSelectedTargetUrl(selectedOption ? selectedOption.value : '');
   };
+  
   const { handleSubmit, control, register, reset, formState: { errors } } = useForm({
     resolver: zodResolver(keywordschema),
   });
@@ -782,55 +918,119 @@ const showDroppedNotification = () => {
   //     await uploadFile(file);
   //   }
   // };
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const workbook = XLSX.read(e.target.result, { type: 'binary' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet);
-        updateTableData(jsonData); // Update the table data
-      };
-      reader.readAsBinaryString(file);
-    } else {
-      toast.error('Please select an Excel file.');
-    }
-  };
-  const updateTableData = (jsonData) => {
-    setFilteredData(jsonData); // Assuming setFilteredData updates the state for your DataTable
-    toast.success('Data imported successfully!');
-  };
+  // const handleFileChange = async (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onload = (e) => {
+  //       const workbook = XLSX.read(e.target.result, { type: 'binary' });
+  //       const sheetName = workbook.SheetNames[0];
+  //       const worksheet = workbook.Sheets[sheetName];
+  //       const jsonData = XLSX.utils.sheet_to_json(worksheet);
+  //       updateTableData(jsonData); // Update the table data
+  //     };
+  //     reader.readAsBinaryString(file);
+  //   } else {
+  //     toast.error('Please select an Excel file.');
+  //   }
+  // };
+  // const updateTableData = (jsonData) => {
+  //   setFilteredData(jsonData); // Assuming setFilteredData updates the state for your DataTable
+  //   toast.success('Data imported successfully!');
+  // };
   
   
-  const uploadFile = async (file) => {
-    const formData = new FormData();
-    formData.append('file', file);
+  // const uploadFile = async (file) => {
+  //   const formData = new FormData();
+  //   formData.append('file', file);
 
-    try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/upload/${userId}/`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+  //   try {
+  //     const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/upload/${userId}/`, formData, {
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //     });
+
+  //     if (response.status === 200) {
+  
+  //       setFilteredData(response.data);
+  //       toast.success('Data imported successfully!');
+  //     } else {
+  //       toast.error('Failed to import data');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error uploading file:', error);
+  //     toast.error('Error uploading file');
+  //   }
+  // };
+  // const triggerFileInput = () => {
+  //   document.getElementById('excelFileInput').click();
+  // };
+
+
+
+  // This function is triggered when a file is selected
+const handleFileChange = async (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    // Read the file using FileReader
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      // Read the Excel file
+      const workbook = XLSX.read(event.target.result, { type: 'binary' });
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      // Convert Excel to JSON
+      const jsonData = XLSX.utils.sheet_to_json(worksheet);
+      // Upload the JSON data
+      await uploadFile(jsonData);
+    };
+    reader.readAsBinaryString(file);
+  } else {
+    toast.error('Please select an Excel file.');
+  }
+};
+
+// This function uploads the JSON data to the server
+
+const uploadFile = async (jsonData) => {
+  const formData = new FormData();
+  // Convert JSON data to Blob and append to FormData
+  formData.append('file', new Blob([JSON.stringify(jsonData)], { type: 'application/json' }));
+
+  try {
+      const response = await axios.post(
+          `${process.env.REACT_APP_API_URL}/api/upload/${userId}/`,
+          formData, // Send FormData
+          {
+              headers: {
+                  'Content-Type': 'multipart/form-data', // Set the correct content type for file upload
+              },
+          }
+      );
 
       if (response.status === 200) {
-  
-        setFilteredData(response.data);
-        toast.success('Data imported successfully!');
+          setFilteredData(response.data);
+          toast.success('Data imported successfully!');
       } else {
-        toast.error('Failed to import data');
+          toast.error('Failed to import data');
       }
-    } catch (error) {
+  } catch (error) {
       console.error('Error uploading file:', error);
       toast.error('Error uploading file');
-    }
-  };
-  const triggerFileInput = () => {
-    document.getElementById('excelFileInput').click();
-  };
-  
+  }
+};
+
+
+// Function to trigger the file input dialog
+const triggerFileInput = () => {
+  document.getElementById('excelFileInput').click();
+};
+
+
+
+
+
   return (
     <>
    
@@ -876,7 +1076,7 @@ const showDroppedNotification = () => {
          Export Excel
         </span>
       </div>
-      <div className="tooltip-container z-[1000]" 
+      {/* <div className="tooltip-container z-[1000]" 
       onMouseEnter={handle_Mouse_Enter} onMouseLeave={handle_Mouse_Leave}>
       <FaUpload
 
@@ -895,9 +1095,13 @@ const showDroppedNotification = () => {
         onChange={handleFileChange}
         accept=".xlsx, .xls"
       />
-    </div>
+    </div> */}
 
-
+<div className="tooltip-container z-[1000]" onMouseEnter={handle_Mouse_Enter} onMouseLeave={handle_Mouse_Leave}>
+        <FaUpload onClick={triggerFileInput} className="text-2xl bg-blue text-white rounded-full p-[10px] fixed bottom-[170px] right-[20px] hover:bg-white hover:text-blue hover:border-2 hover:border-blue hover:transition ease-in-out delay-30 mt-[100px] cursor-pointer" size={50} />
+        <span className={`tooltip-text text-blue bg-white shadow-md rounded-md p-3 fixed bottom-[170px] right-[76px] ${is_Hover_ ? 'block' : 'hidden'}`}>Import Excel</span>
+        <input type="file" id="excelFileInput" style={{ display: 'none' }} onChange={handleFileChange} accept=".xlsx, .xls" />
+      </div>
       {isPopupVisible && (
       <Transition.Root   show={isModal_Open}
         as={Fragment}>
@@ -1077,18 +1281,20 @@ Submit Keywords
         </div>
       </div>
 
-      <div className="p-4 w-full md:w-1/3 px-2">
-        <label className="block font-semibold mt-3 mb-1">Filter by Target URL</label>
-        <Select
-          closeMenuOnSelect={false}
-          components={animatedComponents}
-          isMulti
-          options={uniqueTargetUrls.map((url) => ({ value: url, label: url }))}
-          value={selectedTargetUrls.map((url) => ({ value: url, label: url }))}
-          onChange={handleTargetUrlFilterChange}
-          className="w-full"
-        />
-      </div>
+     
+
+<div className="p-4 w-full md:w-1/3 px-2">
+  <label className="block font-semibold mt-3 mb-1">Filter by Target URL</label>
+  <Select
+    closeMenuOnSelect={true}
+    components={animatedComponents}
+    options={uniqueTargetUrls.map((url) => ({ value: url, label: url }))}
+    value={{ value: selectedTargetUrl, label: selectedTargetUrl }}
+    onChange={handleTargetUrlFilterChange}
+    className="w-full"
+  />
+</div>
+
 
       <div className="p-4 w-full md:w-1/3 px-2">
         <label className="block font-semibold mt-3 mb-[-8px]">Filter by Location</label>
@@ -1112,6 +1318,17 @@ Submit Keywords
             />
           </div>
         ) : (
+          <div className="max-w-screen-lg mx-auto p-4 mt-4">
+
+  {selectedTargetUrl && (
+  <div className="mb-4">
+    <h3 className="font-semibold mb-2">Selected Target URL:</h3>
+      {/* Display the selected URL; adjust styling as needed */}
+      <p className="m-0">{selectedTargetUrl.label || selectedTargetUrl}</p>
+  
+  </div>
+)}
+
           <DndContext
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}>
@@ -1121,7 +1338,7 @@ Submit Keywords
               pagination
               highlightOnHover
               striped
-               paginationPerPage={5}
+               paginationPerPage={10}
               customStyles={customStyles}
               paginationRowsPerPageOptions={[5,10,20,50,100]}
               onRowClicked={handleRowClicked}
@@ -1130,19 +1347,14 @@ Submit Keywords
                conditionalRowStyles={conditionalRowStyles}
 
                 noDataComponent={<NoDataComponent />}
-
+                expandableRows
+                expandableRowsComponent={({ data }) => renderAccordionContent(data)}
+                expandOnRowClicked
 
 
             />
 
 
-            <div ref={tabsRef}>
-              {selectedRow &&(
-                <>
-                 <TabsCustomAnimation rowData={selectedRow} />
-                </>
-              )}
-            </div>
 
 
               {isSidebarOpen &&
@@ -1182,12 +1394,12 @@ Submit Keywords
             </DragOverlay>
           </DndContext>
 
-
+          </div>
         )}
 
-      </div>
     
-
+    
+    </div>
 
     </>
   );

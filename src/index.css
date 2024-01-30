@@ -169,6 +169,12 @@ transition: 0.5s  all;
   -webkit-box-shadow: 15px 10px 17px -11px rgba(155,148,148,0.45);
   -moz-box-shadow: 15px 10px 17px -11px rgba(155,148,148,0.45);
 }
+
+.shadowmenu{
+  box-shadow: -1px 1px 23px 0px rgb(0 0 0 / 15%) !important;
+-webkit-box-shadow: -1px 1px 23px 0px rgb(0 0 0 / 15%) !important;
+-moz-box-shadow: -1px 1px 23px 0px rgb(0 0 0 / 15%) !important;
+}
 .opa{
   opacity: 0.5;
 }
@@ -240,3 +246,51 @@ transition: 0.5s  all;
   z-index: 1000; /* Make sure it's on top of other elements */
 }
 
+
+
+/* .sc-hKFymg , .sc-bCwene {
+  background-color: #ba9934;
+} */
+
+
+.rdt_TableHeadRow div{
+  background-color: #ba9934;
+  font-size: 12px;
+  font-weight: bold;
+  color: #FFFFFF;
+}
+ .bXLDzR{
+  overflow: visible !important;
+
+}
+
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-text {
+  visibility: hidden;
+ width:300px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px ;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: -80%;
+}
+
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+}
+/*----header of table====*/
+.dJBbXM{
+padding-left: 0 !important;
+}
+
+.rdt_TableCol_Sortable,.rdt_TableCell {
+  justify-content: center !important;
+}

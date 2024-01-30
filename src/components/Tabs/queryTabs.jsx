@@ -195,7 +195,7 @@ const TabsCustomAnimation = ({ rowData }) => {
             <TabsHeader className="rounded-none border-b border-blue-gray-50 font-semibold bg-transparent p-0" indicatorProps={{ className: "bg-transparent border-b-2 border-[#ba9934] shadow-none rounded-none" }}>
                 <Tab key="tab1" value="tab1" onClick={() => setActiveTab("tab1")}>Rank Progress</Tab>
                 <Tab key="tab2" value="tab2" onClick={() => setActiveTab("tab2")}>SERP Details</Tab>
-                <Tab key="tab3" value="tab3" onClick={() => setActiveTab("tab3")}>Visibility</Tab>
+                {/* <Tab key="tab3" value="tab3" onClick={() => setActiveTab("tab3")}>Visibility</Tab> */}
             </TabsHeader>
             <TabsBody>
                 <TabPanel key="tab1" value="tab1">

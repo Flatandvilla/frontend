@@ -19,7 +19,6 @@ import USA from '../assets/images/USA.png'
 import AE from '../assets/images/DUBAI.png'
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import QueryDetails from './DetailsPage';
 import TargetDetails from '../components/TargetDetails';
 const TargetPage = () => {
   const [updatingRows, setUpdatingRows] = useState(new Set());
@@ -299,12 +298,6 @@ const handleRowClicked = (row) => {
 
   };
   
-  
-  
-
-  
-  
-
  
  const chartOptions = {
         chart: {
@@ -421,6 +414,7 @@ const handleRowClicked = (row) => {
    max-w-screen-xl  mx-auto  p-4 mt-[4rem]">
 
         <div className="mt-8 text-center  mb-[60px]">
+          <h1 className='text-2xl font-semibold capitalize text-blue'>{encodedTargetUrl}</h1>
         </div>
         
         <div className="text-black  p-2 rounded-lg flex justify-between 
@@ -450,7 +444,7 @@ const handleRowClicked = (row) => {
     </button>
 
 
-    <Link >
+    {/* <Link >
   <button 
        
 
@@ -458,7 +452,7 @@ const handleRowClicked = (row) => {
   >
     {encodedTargetUrl}
   </button>
-</Link>
+</Link> */}
 
  
 

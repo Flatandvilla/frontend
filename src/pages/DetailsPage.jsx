@@ -102,30 +102,7 @@ const handleIframeLoad = () => {
 
 
   
-  // const filterData = (originalData, type) => {
-  //   const currentDate = new Date();
-  //   const startOfCurrentWeek = startOfWeek(currentDate);
-  //   const startOfPreviousWeek = addWeeks(startOfCurrentWeek, -1);
-  //   const previousMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1);
-
-  //   return originalData.filter((item) => {
-  //     const itemDate = parseISO(item.date);
-  //     switch (type) {
-  //       case 'day':
-  //         return isSameDay(currentDate, itemDate);
-  //       case 'week':
-  //         const isCurrentWeek = isSameWeek(currentDate, itemDate, { weekStartsOn: startOfWeek(new Date()).getDay() });
-  //         const isPreviousWeek = itemDate >= startOfPreviousWeek && itemDate < startOfCurrentWeek;
-  //         return isCurrentWeek || isPreviousWeek;
-
-  //       case 'month':
-  //         return isSameMonth(currentDate, itemDate) || isSameMonth(previousMonth, itemDate);
-
-  //       default:
-  //         return true;
-  //     }
-  //   });
-  // };
+ 
   const filterData = (originalData, type) => {
     const currentDate = new Date();
     return originalData.filter((item) => {
@@ -224,17 +201,7 @@ const handleIframeLoad = () => {
             },
             reversed: true
         },
-        // yaxis: {
-        //     title: {
-        //         text: 'Rank'
-        //     },
-        //     labels: {
-        //         formatter: (value) => value.toFixed(0)
-        //     },
-        //     reversed: true,
-        //     min: yAxisMin,
-        //     max: yAxisMax
-        // },
+       
         yaxis: {
           title: {
             text: 'Rank'

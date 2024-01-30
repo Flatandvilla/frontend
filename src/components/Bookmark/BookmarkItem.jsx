@@ -2,12 +2,11 @@
 import React, { useState } from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { FaFolder, FaChevronDown, FaFolderOpen, FaTrash, FaEdit, FaSave, FaEye } from 'react-icons/fa';
-import { Link,  useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const BookmarkItem = ({ bookmark, onRename, handleBookmarkClick, isExpanded, averageRank, handleDeleteBookmark }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [newName, setNewName] = useState(bookmark.name);
-const navigate=useNavigate();
   const handleRename = () => {
     onRename(bookmark.b_id, newName);
     setIsEditMode(false);
@@ -66,7 +65,7 @@ const navigate=useNavigate();
             <FaSave className="text-green-700" />
           </button>
         ) : (
-          <FaEdit className="ml-2 cursor-pointer text-green-700" onClick={() => setIsEditMode(true)} />
+          <FaEdit  className="ml-2 cursor-pointer text-green-700" onClick={() => setIsEditMode(true)} />
         )}
           
           <Link to={`/BookmarkDetails/${bookmark.b_id}`}>
