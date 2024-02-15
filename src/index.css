@@ -1,6 +1,6 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap');
-
+/* @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -32,6 +32,9 @@
     font-family: 'Cairo', sans-serif;
     background-color: #ffff;
     overflow-x: hidden;
+  }
+  .title{
+    font-size: 14px;
   }
   .toggle-width{
     position: relative;
@@ -241,9 +244,9 @@ transition: 0.5s  all;
   background-color: white;
   border-radius: 8px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-  width: 500px; /* Adjust the width as needed */
+  width: 500px; 
   padding: 20px;
-  z-index: 1000; /* Make sure it's on top of other elements */
+  z-index: 1000; 
 }
 
 
@@ -261,26 +264,33 @@ transition: 0.5s  all;
 }
  .bXLDzR{
   overflow: visible !important;
-
 }
 
 .tooltip-container {
-  position: relative;
+  /* position: relative; */
   display: inline-block;
+  cursor: pointer;
 }
-
 .tooltip-text {
   visibility: hidden;
- width:300px;
+  width: 299px;
   background-color: black;
-  color: #fff;
+  color: white;
   text-align: center;
   border-radius: 6px;
-  padding: 5px ;
+  padding: 5px 0;
   position: absolute;
   z-index: 1;
-  bottom: 125%;
-  left: -80%;
+  bottom: 25px;
+  left: 50%;
+  margin-left: -164px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
 }
 
 .tooltip-container:hover .tooltip-text {
@@ -291,6 +301,128 @@ transition: 0.5s  all;
 padding-left: 0 !important;
 }
 
-.rdt_TableCol_Sortable,.rdt_TableCell {
+.rdt_TableCol_Sortable,.rdt_TableCell ,.rdt_TableCell div {
   justify-content: center !important;
+  text-align: center !important;
+}
+
+
+
+.sc-bYwyHq .sc-kLokBR .lhXYTv .kRhoue{
+ visibility: hidden;
+
+}
+.kRhoue {
+  margin: 0px !important;
+}
+.heading_rank{
+  letter-spacing: 2px;
+}
+
+/* html {
+  overflow: auto !important;
+  padding-right: 0px !important;
+} */
+.lolo .kgGExh {
+  flex-grow: 1;
+  flex-shrink: 0;
+  flex-basis: 0;
+  max-width: 100%;
+  min-width: 30px;
+  width: 1px;
+
+}
+.heading_key{
+  position: sticky;
+    top: 70px;
+    z-index: 10000;
+    padding: 1rem;
+    background: #ba9934;
+    color: white;
+}
+.lolo .rdt_TableCol{
+  border-radius: 0.375rem;
+  margin:1px;
+  pointer-events: none;
+}
+.lolo .exulgn,
+.lolo .vUSvH{
+  display:none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 10px;
+  position: absolute;
+  z-index: 10000;
+  bottom: 100%;
+  left: 0%;
+  /* margin-left: -50px; */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+.lolo .rdt_Pagination
+{
+  display: none;
+}
+
+
+/* Add this to your global CSS or a CSS module */
+.tooltip-container:hover .tooltip-content {
+  display: block;
+  width:30px; 
+  text-align: center;
+  left:-20%;
+}
+
+
+.stickySidebar {
+  position: -webkit-sticky; /* For Safari */
+  position: sticky;
+  top: 80px; /* Adjust based on your header's height or desired offset */
+  height: calc(80vh - 90px); /* Adjust if you have a header/footer */
+  overflow-y: auto; /* To make only the sidebar scrollable if it exceeds screen height */
+}
+.update-query{
+  position: fixed;
+  background-color: white;
+  z-index: 9999999;
+  width: 17%;
+  bottom: 0;
+  right: 0;
+  height: 217px;
+  padding-top: 1rem;
+  border: 1px solid;
+  overflow: auto;
+  border-color: rgb(229 231 235);
+  padding-top: 3rem;
+  transition: all ease-in-out 1s;
 }

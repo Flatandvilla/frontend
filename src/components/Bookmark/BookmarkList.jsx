@@ -23,20 +23,6 @@ const BookmarkList = ({ bookmarks, searchBookmark, onBookmarkClick,averageRanksB
     );
   }, [displayBookmarkSlice, searchBookmark]);
 
-  // const handleCreateBookmark = async () => {
-  //   if (newBookmarkName.trim() === '') {
-  //     return;
-  //   }
-  //   const newBookmarkData = {
-  //     name: newBookmarkName,
-  //   };
-  //   const createdBookmark = await dispatch(createBookmark(newBookmarkData)).unwrap();
-
-  //   setFilteredBookmarks([...filteredBookmarks, createdBookmark]);
-  //   setNewBookmarkName('');
-  //   fetchAllBookmarks();
-  // };
-  
   const handleCreateBookmark = async () => {
     if (newBookmarkName.trim() === '') {
       return;
@@ -79,6 +65,7 @@ const BookmarkList = ({ bookmarks, searchBookmark, onBookmarkClick,averageRanksB
 
   const handleBookmarkClick = (bookmarkId) => {
     onBookmarkClick(bookmarkId);
+
   };
 
 
@@ -153,16 +140,17 @@ const handleRenameBookmark = async (bookmarkId, newName) => {
   }
 };
 
-  
+
+
 
   return (
-    <div className="p-4 rounded shadow-md mt-4 listtest">
+    <div className=" rounded z-[10000] mt-4 listtest">
     
 <div className="flex justify-between mb-2">
   <div className="relative flex-grow">
     <input
       type="text"
-      placeholder="Enter bookmark name"
+      placeholder="Add Bookmark ...."
       className="border rounded px-2 h-[30px] w-full focus:outline-none pr-10" // Increased padding-right to make space for the icon
       value={newBookmarkName}
       onChange={(e) => setNewBookmarkName(e.target.value)}
@@ -179,15 +167,17 @@ const handleRenameBookmark = async (bookmarkId, newName) => {
   </div>
 </div>
 
-      <div className="max-h-96 overflow-y-auto rounded-sm">
+
+     <div className='overflow-auto Book_list h-[300px]'>
+     <div className=" overflow-visible  rounded-sm">
       {filteredBookmarks.map((bookmark) => (
       <BookmarkItem
+
         key={bookmark.b_id}
         bookmark={bookmark}
         handleBookmarkClick={() => handleBookmarkClick(bookmark.b_id)}
         isExpanded={expandedBookmarkId === bookmark.b_id}
         averageRank={averageRanksByBId[bookmark.b_id] || 0} 
-        // handleDeleteBookmark={() => handleDeleteBookmark(bookmark.b_id)}
         handleDeleteBookmark={() => handleDeleteBookmark(userId, bookmark.b_id)}
         onRename={handleRenameBookmark}
 
@@ -196,6 +186,8 @@ const handleRenameBookmark = async (bookmarkId, newName) => {
       />
     ))}
       </div>
+     </div>
+
     </div>
   );
 };

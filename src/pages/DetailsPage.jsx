@@ -1,20 +1,15 @@
 
 import React, { useEffect, useState ,useRef} from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
 import Chart from 'react-apexcharts';
-import { format, parseISO, isSameDay, isSameWeek, isSameMonth, startOfWeek } from 'date-fns';
+import { format, parseISO, isSameDay } from 'date-fns';
 import { ClipLoader } from 'react-spinners';
-import { useDispatch } from 'react-redux';
-import { deleteRank } from '../redux/lib/deleteRow';
 import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
-import { MdDeleteOutline } from "react-icons/md";
-import { addWeeks } from 'date-fns';
 import USAFlagImage from '../assets/images/USA.png';
 import EgyptFlagImage from '../assets/images/EGYPT.png';
 import AEFlagImage from '../assets/images/DUBAI.png';
-import { Tabs, TabsHeader, TabsBody, Tab, TabPanel } from "@material-tailwind/react";
 import Serpanalysis from '../components/Serpanalysis';
 import { addDays } from 'date-fns';
 
@@ -32,6 +27,7 @@ const [yAxisMax, setYAxisMax] = useState(100);
   const [activeTab, setActiveTab] = useState("tab1");
   const [showTabs, setShowTabs] = useState(false);
   const [showIframe, setShowIframe] = useState(false); // State to control iframe visibility
+  const navigate = useNavigate();
 
   const handleTargetUrlClick = () => {
     setShowIframe(true); // Show iframe when button is clicked
@@ -46,7 +42,6 @@ const handleIframeLoad = () => {
   const [filterType, setFilterType] = useState('month');
 
   const [filteredData, setFilteredData] = useState([]);
-  const dispatch = useDispatch(); 
 
   const filterButtons = [
     { label: 'Day', value: 'day' },
@@ -60,48 +55,72 @@ const handleIframeLoad = () => {
   
 
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/display-ranks/${userId}/${encodedQuery}/${encodedTargetUrl}/${google_domain}/`);
-        if (response.ok) {
-          const apiData = await response.json();
-          setData(apiData);
-          const filtered = filterData(apiData, filterType); 
-          setFilteredData(filtered);
+// useEffect(() => {
+//   const fetchData = async () => {
+//     setLoading(true);
+//     try {
+//       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/display-ranks/${userId}/${encodedQuery}/${encodedTargetUrl}/${google_domain}/`);
+//       if (response.ok) {
+//         const apiData = await response.json();
+//         setData(apiData);
 
-          const ranks = apiData.map(item => parseInt(item.rank));
-          const minRank = Math.min(...ranks);
-          const maxRank = Math.max(...ranks);
-          setYAxisMin(minRank);
-          setYAxisMax(maxRank);
-         
-          // Find the data entry for the current day
-          const today = new Date();
-          const todayData = filtered.find(item => isSameDay(parseISO(item.date), today));
-          if (todayData) {
-            setSelectedData(todayData); 
+//         // Set the last entry of the dataset as the selected row by default
+//         if (apiData.length > 0) {
+//           setSelectedData(apiData[apiData.length - 1]);
+//         }
+//       } else {
+//         console.error('Error fetching data:', response.statusText);
+//       }
+//     } catch (error) {
+//       console.error('Error fetching data:', error);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   fetchData();
+// }, [userId, encodedQuery, encodedTargetUrl, google_domain]);
+
+
+useEffect(() => {
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/display-ranks/${userId}/${encodedQuery}/${encodedTargetUrl}/${google_domain}/`);
+      if (response.ok) {
+        let apiData = await response.json();
+        
+        // Sort the data by date to ensure it's in the correct order
+        apiData.sort((a, b) => new Date(a.date) - new Date(b.date));
+        
+        // Calculate rank differences
+        apiData = apiData.map((item, index, array) => {
+          // Assuming the array is sorted by date
+          if (index > 0) {
+            const previousRank = array[index - 1].rank;
+            const currentRank = item.rank;
+            return { ...item, rankDifference: previousRank -  currentRank};
           }
-  
-          setSourceUrl(apiData[0].source_url); // Assuming apiData[0] has the relevant URL
-        } else {
-          console.error('Error fetching data:', response.statusText);
+          return { ...item, rankDifference: 0 }; // No difference for the first item
+        });
+        
+        setData(apiData);
+        if (apiData.length > 0) {
+          setSelectedData(apiData[apiData.length - 1]);
         }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
+      } else {
+        console.error('Error fetching data:', response.statusText);
       }
-    };
-  
-    fetchData();
-  // }, [userId, encodedQuery, encodedTargetUrl, filterType, google_domain]);
-  
-}, [userId, encodedQuery, encodedTargetUrl, filterType, google_domain]);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  fetchData();
+}, [userId, encodedQuery, encodedTargetUrl, google_domain]);
 
-  
  
   const filterData = (originalData, type) => {
     const currentDate = new Date();
@@ -123,61 +142,54 @@ const handleIframeLoad = () => {
     setFilteredData(filterData(data, filterType));
   }, [filterType, data]);
 
-  const handleDeleteRow = (queryId) => {
-    dispatch(deleteRank(queryId))
-      .then(() => {
-        // Remove the deleted row from the data state
-        setData((prevData) => prevData.filter((item) => item.query_id !== queryId));
-  
-        // Update the filteredData state based on the current filterType
-        setFilteredData((prevFilteredData) =>
-          prevFilteredData.filter((item) => item.query_id !== queryId)
-        );
-      })
-      .catch((error) => {
-        console.error('Error deleting row:', error);
-      });
-  };
-  
-  
-  const columns = [
-    {
-      name: 'Date',
-      selector: (row) => format(parseISO(row.date), 'EEE, MMM d, yyyy'),
-  
-      cell: (row) => (
-        <span>
-          {format(parseISO(row.date), 'EEE, MMM d, yyyy')}
-        </span>
-      ),
-    },
-    {
-      name: 'Rank ',
-      selector: (row) => row.rank,
-     
-    },
-    {
-      name: 'Actions',
-      cell: (row) => (
-        <div>
-       
-          <button
-            onClick={() => handleDeleteRow(row.query_id)} // Pass the query_id to the delete function
-            className="text-red-500 px-2 py-1 rounded-lg border
-             border-red-500 ml-2 hover:bg-red-500 hover:text-white transition-all ease-in-out duration-300"
-          >
-                   <MdDeleteOutline />
 
-          </button>
-        </div>
-      ),
-    },
- 
+  
+  // const columns = [
+  //   {
+  //     name: 'Date',
+  //     selector: (row) => format(parseISO(row.date), 'EEE, MMM d, yyyy'),
+  
+  //     cell: (row) => (
+  //       <span>
+  //         {format(parseISO(row.date), 'EEE, MMM d, yyyy')}
+  //       </span>
+  //     ),
+  //   },
+  //   {
+  //     name: 'Rank ',
+  //     selector: (row) => row.rank,
+     
+  //   },
+   
 
     
-  ];
+  // ];
 
- 
+
+  const columns = [
+    // Existing columns...
+    {
+      name: 'Date',
+      selector: (row) => format(parseISO(row.date), ' MMM d, yyyy'),
+      cell: (row) => format(parseISO(row.date), ' MMM d, yyyy'),
+    },
+    {
+      name: 'Rank',
+      selector: (row) => row.rank,
+    },
+    {
+      name: 'Difference',
+      selector: (row) => row.rankDifference,
+      cell: (row) => (
+        <div style={{ color: row.rankDifference > 0 ? 'green' : row.rankDifference < 0 ? 'red' : 'black' }}>
+          {row.rankDifference > 0 ? `+${row.rankDifference}` : row.rankDifference}
+        </div>
+      ),
+      sortable: true,
+    },
+  
+  ];
+  
  const chartOptions = {
         chart: {
             id: 'chart-id',
@@ -185,6 +197,9 @@ const handleIframeLoad = () => {
             zoom: {
                 enabled: false
             },
+          
+             
+
             dropShadow: {
                 enabled: true,
                 color: '#000',
@@ -295,12 +310,13 @@ const handleIframeLoad = () => {
 
   return (
    <div className="  relative flex flex-col  min-h-screen md:w-full  z-[100] bg-white 
-   max-w-screen-lg mx-auto  p-4 mt-[4rem]">
+ p-0  lg-plus:px-[100px] mx-auto   mt-[4rem]">
 
-        <div className="mt-8 text-center  mb-[60px]">
-          <h1 className="text-3xl font-bold">{encodedQuery}</h1>
-        </div>
-        
+     
+
+    <h1 className="text-3xl font-bold text-center mt-[10px] mb-[10px]">{encodedQuery}</h1>
+
+     
         <div className="text-black  p-2 rounded-lg flex justify-between 
         items-center space-x-2">
   <div className="flex items-center space-x-2 justify-center">
@@ -355,33 +371,36 @@ const handleIframeLoad = () => {
    </div>
    
   </div>
-</div>
+      </div>
 
 
 
 
    
     {loading ? (
-      <div className=" flex lg:flex-col justify-center items-center  mx-auto items-center h-64">
+      <div className=" flex lg:flex-col justify-center items-center  mx-auto  h-64">
         <ClipLoader color={'#2563EB'} loading={loading} size={50} />
         <p className="text-lg text-black ml-2">Loading...</p>
       </div>
     ) : (
-      <div className="flex flex-col items-center justify-between lg:flex-row bg-white shadow-sm
+
+      <div className="flex flex-col items-center justify-between 
+      lg-plus:flex-row bg-white 
        rounded-md   lg:space-x-4
       lg:space-y-0 space-y-10 p-[20px] ">
-        <div className=" lg:mb-5 lg:w-1/2 mt-0 ">
+        <div className=" lg:mb-5 lg-plus:w-[35%] w-[100%] mt-0 ">
           <DataTable
             columns={columns}
             data={filteredData}
             pagination
+            paginationPerPage={5}
             striped
             onRowClicked={handleRowClicked}
             highlightOnHover
             customStyles={{
               rows: {
                 style: {
-                  minHeight: '72px', // override the row height
+                  minHeight: '40px', // override the row height
                 },
               },
               headCells: {
@@ -394,7 +413,7 @@ const handleIframeLoad = () => {
             }}
           />
         </div>
-        <div className="lg:mb-0 lg:w-1/2 mt-0 md:mt-5  mb-[-10]" ref={chartRef}>
+        <div className="lg:mb-0 w-[100%] lg-plus:w-[65%]  mt-0 md:mt-5  mb-[-10]" ref={chartRef}>
           <Chart
             options={chartOptions}
             series={chartSeries}
@@ -411,56 +430,45 @@ const handleIframeLoad = () => {
     )}
 
 
-{/* {showTabs &&( */}
-<Tabs value={activeTab} className="  bg-white shadow-sm
-        
-        p-4 mt-[1rem]">
-              <TabsHeader
-                  className="rounded-none border-b border-blue-gray-50 font-semibold bg-transparent p-0"
-                  indicatorProps={{
-                      className: "bg-transparent border-b-2 border-[#ba9934] shadow-none rounded-none",
-                  }}
-              >
-                  <Tab key="tab1" value="tab1" onClick={() => setActiveTab("tab1")}>
-                      Article Preview
-                  </Tab>
-                  <Tab key="tab2" value="tab2" onClick={() => setActiveTab("tab2")}>
-                     SERP analysis
-                  </Tab>
-                  <Tab key="tab3" value="tab3" onClick={() => setActiveTab("tab3")}>
-                      Visibility
-                  </Tab>
-              </TabsHeader>
-              <TabsBody>
-              <TabPanel key="tab1" value="tab1">
+{loading ? (
+        <div className="flex lg:flex-col justify-center items-center mx-auto h-64
+         ">
+          <ClipLoader color={'#2563EB'} loading={loading} size={50} />
+          <p className="text-lg text-black ml-2">Loading...</p>
+        </div>
+      ) : (
+        <div className="flex space-x-[70px] w-full ">
+          {/* Article Preview Section - 70% Width */}
+          <div className="w-[70%]">
+            <h1  className='border-b border-blue text-2xl p-3 mb-3 '>Article Preview</h1>
             {iframeLoading && (
               <div className="flex justify-center items-center h-64">
-                <ClipLoader color={'#ba9934'} 
-                loading={iframeLoading} size={50} />
+                <ClipLoader color={'#ba9934'} loading={iframeLoading} size={50} />
               </div>
             )}
-            <iframe 
-              src={sourceUrl} 
-              title="External Content" 
-              width="100%" 
+            <iframe
+              src={sourceUrl}
+              title="External Content"
+              width="100%"
               height="500px"
               frameBorder="0"
-              onLoad={handleIframeLoad} // Trigger function when iframe loads
-              style={{ display: iframeLoading ? 'none' : 'block' }} // Hide iframe while loading
+              onLoad={handleIframeLoad}
+              style={{ display: iframeLoading ? 'none' : 'block' }}
             />
-          </TabPanel>
-                  <TabPanel key="tab2" value="tab2">
-  {selectedData && 
-  <Serpanalysis rowData={selectedData} />
-  }
-</TabPanel>
+    
 
-                  <TabPanel key="tab3" value="tab3">
-                      <p>Content for Tab 3 goes here.</p>
-                  </TabPanel>
-              </TabsBody>
-          </Tabs>
-          {/* )} */}
+          </div>
+
+          {/* SERP Analysis Section - 30% Width */}
+          <div className="w-[30%]">
+          <h1 className='border-b border-blue text-2xl p-3 mb-3 '>SERP Details</h1>
+
+         {/* <Serpanalysis rowData={selectedData} /> */}
+         {selectedData && <Serpanalysis rowData={selectedData} />}
+
+          </div>
+        </div>
+      )}
     </div>
   
   );

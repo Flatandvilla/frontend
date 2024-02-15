@@ -337,7 +337,7 @@
 
 
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
     Tabs,
@@ -354,9 +354,12 @@ import { processKeyword } from '../redux/lib/querySlice';
 import useCachedData from '../hook/useCachedData';
 import KeywordTabs from '../components/keywordresearch/components/keyword/KeywordTabs';
 import QueryKeyword from '../components/Adding/QueryKeyword';
+import CompareTooltip from '../components/keywordresearch/Searchpopup/CompareTooltip';
 
 export function Search({ closePopup }) {
+  
     const { cachedKeywordData, cachedUrlData } = useCachedData();
+   
     const [activeTab, setActiveTab] = useState("query");
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -365,7 +368,7 @@ export function Search({ closePopup }) {
 
     const { register: registerKeyword, handleSubmit: handleSubmitKeyword, reset: resetKeyword } = useForm();
     const { register: registerURL, handleSubmit: handleSubmitURL, reset: resetURL } = useForm();
-    
+
     const onKeywordSubmit = (data) => {
         setIsKeywordLoading(true);
         dispatch(processKeyword(data))
@@ -417,32 +420,81 @@ export function Search({ closePopup }) {
         placeholder: "Enter URL...",
       }
     ];
+
+    const LastUrlSearch = () => {
+       
+        // Continue with original logic
+        const domainRegex = /^(?:https?:\/\/)?(?:www\.)?([^\/]+)/;
+        const match = cachedUrlData.url.match(domainRegex);
+        const readableUrl = match ? match[1] : 'Invalid URL';
+        console.log(readableUrl)
+    
+        return (
+                <div className='w-[50%] px-[100px] '>
+                    <h3 className='font-bold text-3xl text-blue'>
+                        Last URL Search: { " "}
+                        <a href={cachedUrlData.url} target="_blank" rel="noopener noreferrer" 
+                        className='text-blue  hover:text-blue visited:text-gray-500 capitalize '>
+                            {readableUrl}
+                        </a>
+                    </h3>
+                </div>
+          
+        );
+    };
+    
+    const LastKeywordSearch = () => {
+        // Assuming cachedKeywordData is an array and we're interested in the last item's query
+        const lastKeywordSearch = cachedKeywordData?.length > 0 ? cachedKeywordData[cachedKeywordData.length - 1].query : 'No keyword search available';
+    
+        return (
+            <div className='mt-[100px]'>
+            
+                    <h4 className='font-bold text-3xl text-blue'>Last Keyword Search: {" "}
+                        <span className="text-blue-600 hover:text-blue-800 visited:text-purple-600">
+                            {lastKeywordSearch}
+                        </span>
+                    </h4>
+                 
+            </div>
+        );
+    };
+    
     const renderCachedData = () => {
         return (
             <div>
                 {cachedKeywordData && (
                     <div className='mt-[100px]'>
                       <div className='px-[100px] '>
-                      <h4 className='font-bold text-3xl text-blue'>Last Keyword Search:</h4>
+                      {/* <h4 className='font-bold text-3xl text-blue'>Last Keyword Search: fff
+                       {cachedKeywordData.keyword}</h4> */}
+ {cachedKeywordData && (
+                <LastKeywordSearch /> // This will show the last keyword search
+            )}
                       <KeywordTabs/>
                       <QueryKeyword/>
+      <CompareTooltip/>
 
                         </div>
                     </div>
                 )}
+
+
                 {cachedUrlData && (
                     <div className='mt-[100px] '>
-                                              <div className='w-[50%] px-[100px] '>
+                                           
 
-                        <h3 className='font-bold text-3xl text-blue'>Last URL Search:</h3>
-</div>
+                         
+                        <LastUrlSearch/>
                         <UrlCaching/>
                     </div>
                 )}
+            
             </div>
         );
     };
-
+  
+    
     return (
         <div >
            
@@ -451,8 +503,7 @@ export function Search({ closePopup }) {
                 ) : (
                     <div className="popup-container">
                   <div className="popup-wrapper relative">
-                  {/* <button onClick={closePopup} className="close-btn">&times;</button> */}
-  
+                   
                   <Tabs value={activeTab} onChange={setActiveTab}>
                    <TabsHeader
                         className="bg-transparent"

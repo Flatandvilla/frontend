@@ -10,7 +10,8 @@ import { login } from "../../redux/lib/auth";
 import { useDispatch } from "react-redux";
 
 
-const LoginForm = () => {
+const LoginForm = ({NameUser}) => {
+  console.log(NameUser)
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -39,6 +40,7 @@ const LoginForm = () => {
       };
      
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/login/`,
+      
         loginData,
         {
           headers: {
@@ -46,22 +48,22 @@ const LoginForm = () => {
           },
         }
       );
+  const NameUser=response.data.Name;
+  localStorage.setItem('NameUser', NameUser);
 
-  
       toast.success("Login successful");
    
 
       dispatch(login({
         token: response.data.token, 
         id: response.data.id, 
-       
 
       }));
       
 
       navigate("/");
      
-      // console.log(response.data);
+      
     } catch (error) {
       // Handle login failure
       toast.error("Email or password may not be correct");

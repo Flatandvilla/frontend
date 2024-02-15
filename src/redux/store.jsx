@@ -16,6 +16,8 @@ import UrlSlice from './lib/urlSearch';
 import querySlice from './lib/querySlice'
 import keywordsingleSlice from './lib/singlekeyword';
 import dataSlice from "./lib/dataSlice";
+import quoriesSlice from "./lib/quoriesSlice"
+import favoritesSlice from "./lib/favSlice"
 const rootReducer = combineReducers({
   authSlice,
   tableSlice,
@@ -29,7 +31,9 @@ const rootReducer = combineReducers({
   UrlSlice,
   querySlice,
   keywordsingleSlice,
-  dataSlice
+  dataSlice,
+  quoriesSlice,
+  favoritesSlice,
 });
 
 

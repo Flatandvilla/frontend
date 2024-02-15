@@ -6,13 +6,13 @@ import Routes from '../pages/Routes/index';
 const Content = ({ show }) => {
   console.log(show)
   // Conditional class for the left margin to accommodate the sidebar
-  const marginLeftClass = show ? 'md:ml-[180px]' : 'md:ml-[56px]';
+  const marginLeftClass = show ? 'md:ml-[13%]' : 'md:ml-[56px]';
 
   return (
-    <div className={` mx-auto 
+    <div className={` 
     absolute z-[-10] 
   bg-white h-screen ${marginLeftClass} transition-all   fixed inset-0 
-     duration-300 ease-in-out mx-auto `}>
+     duration-300 ease-in-out A `}>
       <Routes  />
 
     </div>

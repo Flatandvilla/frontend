@@ -18,12 +18,14 @@ const Sidebar = ({ toggle, show }) => {
   return (
  
   <div 
-  ref={sidebarRef}
-   className={`min-h-screen z-[100] bg-white shadowsidebar transition-all ease-in-out duration-300 dark:bg-slate
-    ${show ? 'w-full md:w-64  fixed top-0 left-0  ' : ' md:block fixed '}`}>
+  // ref={sidebarRef}
+   className={`h-full z-[100] bg-white border-r-2 border-gray-200 transition-all ease-in-out duration-300 dark:bg-slate
+    ${show ? 'md:w-[13%] w-full  fixed top-0 left-0  ' : ' w-full bg-red-900'}`}>
 
-
-      <div
+<div>
+  <h1 className='uppercase	text-center heading_rank text-blue font-bold  p-4'>Rank Tracker</h1>
+  </div>
+      {/* <div
         className="absolute top-4 font-bold right-[-45px] bg-blue p-2 
         rounded-full text-white shadow-lg
         cursor-pointer transition-transform duration-300 z-[-100]"
@@ -39,8 +41,8 @@ const Sidebar = ({ toggle, show }) => {
           <GiHamburgerMenu size={16} />
         )}
 
-      </div>
-      <div className="logo w-full text-center my-8 text-blue">
+      </div> */}
+      {/* <div className="logo w-full text-center my-8 text-blue">
         <h1>
           {show ? (
             <div>
@@ -62,24 +64,22 @@ const Sidebar = ({ toggle, show }) => {
             
           )}
         </h1>
-      </div>
+      </div> */}
       {/* Menu Links */}
-      <div className="menu flex flex-col gap-4 transition-all ease-in-out duration-300 p-2">
+      <div className="menu flex flex-col gap-1  
+      transition-all ease-in-out duration-300 p-2">
   {data.map(({ id, icon, name: title, path }) => (
     <Link
       key={id}
       to={path}
-      // Removed the onClick attribute
       className={`${
         location.pathname === path
-          ? 'bg-blue text-white'
+          ? 'border-r-2 border-blue   font-bold '
           : 'text-blue'
-      } hover:bg-blue hover:shadow-md transition-all
-       ease-in-out duration-300 hover:text-white rounded-[10px] py-2
+      } hover:border-r-2 border-blue hover:shadow-md  hover:text-blue  py-2
        flex items-center`}
     >
-      <div className="w-14 h-8 flex items-center justify-center">{icon}</div>
-      {show && <div className="title ml-2">{title}</div>}
+      {show && <div className="title ml-2  ">{title}</div>}
     </Link>
   ))}
 </div>

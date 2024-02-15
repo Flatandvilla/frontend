@@ -4,7 +4,7 @@ import Content from './Content';
 import Sidebar from './Sidebar';
 
 const Layout = () => {
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
 
   const toggle = () => {
     setShow(!show);

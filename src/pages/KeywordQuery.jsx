@@ -1,23 +1,14 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
 import { Search } from './Search';
 import { FaPlus } from 'react-icons/fa'; // Importing an icon
-import { useLocation, useNavigate, useNavigation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import KeywordTabs from '../components/keywordresearch/components/keyword/KeywordTabs';
 import { MdCompareArrows } from "react-icons/md";
+import ComparePopUp from '../components/keywordresearch/Searchpopup/ComparePopUp';
+import CompareTooltip from '../components/keywordresearch/Searchpopup/CompareTooltip';
 
 const KeywordQuery = () => {
-  const [selectedTabsData, setSelectedTabsData] = useState([]);
   const navigate = useNavigate();
-
-  const handleSelectionChange = (selected) => {
-    setSelectedTabsData(selected);
-  };
-
-  const handleCompareClick = () => {
-    navigate('/Comparequery', { state: { selectedTabsData } });
-  };
-
   const [isHovering, setIsHovering] = useState(false);
   const handleMouseEnter = () => {
     setIsHovering(true);
@@ -26,16 +17,8 @@ const KeywordQuery = () => {
   const handleMouseLeave = () => {
     setIsHovering(false);
   };
-  const [is_Hovering, set_IsHovering] = useState(false);
-  const handle_MouseEnter = () => {
-    set_IsHovering(true);
-  };
-
-  const handle_MouseLeave = () => {
-    set_IsHovering(false);
-  };
+ 
   const [isPopupVisible, setIsPopupVisible] = useState(true);
-  const cancelButtonRef = React.useRef(null);
   const location = useLocation();
   const { urlData, keywordData } = location.state || {};
 
@@ -109,13 +92,14 @@ const handle=()=>{
       onClick={handle} 
       >
         <FaPlus
-          //  onClick={openPopup}
+        onClick={openPopup}
           className="text-2xl bg-blue text-white rounded-full p-2 
-          fixed bottom-[30px] right-[20px] hover:bg-white hover:text-blue hover:border-2 hover:border-blue hover:transition ease-in-out delay-30 mt-[100px] cursor-pointer"
+          fixed bottom-[30px] right-[20px] hover:bg-white hover:text-blue
+           hover:border-2 hover:border-blue hover:transition ease-in-out delay-30 mt-[100px] cursor-pointer z-[100]"
           size={50}
         />
         <span
-          className={`tooltip-text text-blue
+          className={` text-blue
            bg-white shadow-md rounded-md p-3 fixed bottom-[40px] z-[100] right-[76px] 
            ${isHovering ? 'block' : 'hidden'}`}
         >
@@ -126,6 +110,9 @@ const handle=()=>{
       
 
 
+
+      
+<CompareTooltip/>
     </div>
   );
 };

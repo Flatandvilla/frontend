@@ -18,6 +18,8 @@ import { Search } from '../Search';
 import { SearchingPopup } from '../SearchingPopup';
 import UrlCaching from '../UrlCaching';
 import BookmarkDetails from '../Bookmark/BookmarkDetails';
+import Main from '../Main';
+import ComparePage from '../ComparePage';
 
 const Index = () => {
   
@@ -26,6 +28,8 @@ const Index = () => {
   return (
     <Routes>
       <Route path='/' element={<Dashboard />} />
+      <Route path='/home' element={<Main />} />
+      <Route path='/comparepage' element={<ComparePage />} />
       <Route path='/keywordresearch' element={<KeywordResearch />} />
       <Route path='/keywordquery' element={<KeywordQuery />} />
       <Route path='/Comparequery' element={<Comparequery />} />

@@ -1,20 +1,24 @@
 
 import React, { useState } from 'react';
 import { BiUser } from 'react-icons/bi';
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { logOut } from '../redux/lib/auth'
 import Cookies from 'js-cookie'
 import { useNavigate } from "react-router-dom";
 const Profile = () => {
+
     const navigate=useNavigate()
     const dispatch = useDispatch()
+    const NameUser = localStorage.getItem('NameUser');
+
     const handleLogOut = () =>{
       Cookies.remove('user')
       dispatch(logOut({isAuth:false, user: null}))
       navigate("/login")
     }
   const [isOpen, setIsOpen] = useState(false);
-
+ 
+  
   const handleToggle = () => {
     setIsOpen(!isOpen);
   };
@@ -39,8 +43,9 @@ const Profile = () => {
         <div className="absolute right-0 z-10 mt-2 w-48 origin-top-right
          rounded-md bg-white py-1 shadow-lg ring-1
          ring-white ring-opacity-5 focus:outline-none">
-          <a href="/account" className="block px-4 py-2 text-sm text-gray-700">
-            Your Profile
+          <a href="/account" className="block px-4 py-2 text-sm text-gray-700 font-bold">
+          {NameUser} 
+
           </a>
           <a href="#" className="block px-4 py-2 text-sm text-gray-700">
             Settings

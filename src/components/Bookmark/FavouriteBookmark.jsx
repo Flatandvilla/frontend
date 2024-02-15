@@ -10,7 +10,7 @@ const FavouriteBookmark = ({ favorites, onBackClick }) => {
     uniqueQueries.add(favorite.rank.query);
     return isUnique;
   });
-
+console.log(uniqueFavorites)
   return (
     <div>
       <div className="flex justify-start mb-4 bg-white w-7 h-8">
@@ -24,19 +24,14 @@ const FavouriteBookmark = ({ favorites, onBackClick }) => {
       <h3 className="text-xl font-semibold mb-3 text-gray-800">Favorites Bookmarks:</h3>
       <ul className="list-none list-inside">
         {uniqueFavorites.map(favorite => (
-          <div key={favorite.favo_id} className='flex justify-between items-center mb-3'>
-            <a  href={favorite.rank.source_url}
-             target="_blank" 
-              className="text-gray-600">{favorite.rank.query}</a>
-            <a href={favorite.rank.source_url} 
-               className="text-white bg-blue rounded-md p-2 " 
-               target="_blank" 
-               rel="noopener noreferrer">
-              {favorite.rank.target_url}
-            </a>
-            <h1>{favorite.rank.rank}</h1>
-
-          </div>  
+          <li key={favorite.favo_id} className='flex justify-between items-center mb-3'>
+            <a href={favorite.rank.source_url}
+               target="_blank"
+               rel="noopener noreferrer"
+               className="text-gray-600">{favorite.rank.query}</a>
+            <a href={favorite.rank.source_url}    target="_blank"
+               rel="noopener noreferrer">{favorite.rank.rank}</a>
+          </li>  
         ))}
       </ul>
     </div>

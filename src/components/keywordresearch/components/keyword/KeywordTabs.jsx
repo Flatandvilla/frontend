@@ -10,28 +10,9 @@ import { useSelector } from "react-redux";
 import ContentKeyword from "./ContentKeyword";
 import AltQuery from "./AltQuery";
 import CaptionQuery from "./CaptionQuery";
-import  { CheckboxCustomIcon } from "../../../Checkbox";
 import KeywordtableQuery from "./KeywordtableQuery"
   const KeywordTabs = () => {
-
-  const [selectedTabsData, setSelectedTabsData] = useState([]);
-
-  const handleCheckboxChange = (tabName, isChecked) => {
-    if (isChecked) {
-      // Find and add the tab's data
-      const tabData = keywordData.find(item => extractNameFromUrl(item.url) === tabName);
-    
-      if (tabData) {
-        setSelectedTabsData(prev => [...prev, { tabName, data: tabData }]);
-      }
-    } else {
-      // Remove the tab's data
-      setSelectedTabsData(prev => prev.filter(item => item.tabName !== tabName));
-    }
-  };
-
   const keywordData = useSelector((state) => state.querySlice.data);
-  console.log(keywordData);
   const [selectedKeyword, setSelectedKeyword] = useState('');
   const [selectedTabResultsSample, setSelectedTabResultsSample] = useState([]);
   const [selectedTabAltSample, setSelectedTabAltSample] = useState([]);
@@ -79,6 +60,8 @@ import KeywordtableQuery from "./KeywordtableQuery"
   }, [keywordData]); // 
 
 
+
+
   const handleKeywordClick = (keyword) => {
     setSelectedKeyword(keyword);
   
@@ -86,24 +69,16 @@ import KeywordtableQuery from "./KeywordtableQuery"
       (item) => extractNameFromUrl(item.url) === keyword
     );
   
-    // if (selectedKeywordData) {
-    //   setSelectedTabResultsSample(selectedKeywordData.results_sample);
-    //   setSelectedTabAltSample(selectedKeywordData.alt_sample);
-    //   setSelectedTabTextContent(selectedKeywordData.text_content);
-    //   setSelectedCount(selectedKeywordData.count); 
-    //   setSelectedCount(selectedKeywordData.captions_text); 
-
-    //   // Update the count
-    // }
     if (selectedKeywordData) {
       setSelectedTabResultsSample(selectedKeywordData.results_sample);
       setSelectedTabAltSample(selectedKeywordData.alt_sample);
       setSelectedTabTextContent(selectedKeywordData.text_content);
       setSelectedCount(selectedKeywordData.count); 
       setSelectedCaptionText(selectedKeywordData.captions_text);
-       // Corrected line
+  
+      // Log the results_sample array for the selected keyword
+      console.log("results_sample for selected:", selectedKeywordData.results_sample);
     }
-    
   };
   
 
@@ -139,10 +114,7 @@ import KeywordtableQuery from "./KeywordtableQuery"
           >
        <div className="flex items-center space-around ">
        <div>
-       {/* <CheckboxCustomIcon
-  checked={selectedTabsData.some(tabData => tabData.tabName === uniqueTabNames[index])}
-  onChange={(e) => handleCheckboxChange(uniqueTabNames[index], e.target.checked)}
-/> */}
+    
 
         </div>
         <div>
@@ -167,6 +139,8 @@ import KeywordtableQuery from "./KeywordtableQuery"
                     onKeywordClick={handleKeywordClick}
                     data={selectedTabResultsSample}
                   />
+
+
                   <ContentKeyword
                     selectedKeyword={selectedKeyword}
                     resultsSample={selectedTabResultsSample}

@@ -495,7 +495,8 @@ const handleRowClicked = (row) => {
           onRowClicked={handleRowClicked}
         />
         </div>
-        <div className="lg:mb-0 lg:w-1/2 mt-0 md:mt-5 mb-[-10]" ref={chartRef}>
+        <div className="lg:mb-0 lg:w-1/2 mt-0 md:mt-5 mb-[-10]"
+         ref={chartRef}>
         <Chart options={chartOptions} series={chartSeries} type="line" height={250} />
         
       </div>

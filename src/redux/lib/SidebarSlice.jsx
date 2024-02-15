@@ -4,7 +4,7 @@ import { createSlice } from '@reduxjs/toolkit';
 export const SidebarSlice = createSlice({
   name: 'sidebar',
   initialState: {
-    isOpen: false,
+    isOpen: true,
   },
   reducers: {
     toggle_Bookmark: (state) => {

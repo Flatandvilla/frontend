@@ -9,17 +9,31 @@ import {FiUserCheck} from 'react-icons/fi'
 import { TbDeviceAnalytics } from "react-icons/tb";
 
 export const sidebarLinks = [
+  // {
+  //   id:1,
+  //   name:'Home',
+  //   path:'/home',
+  //   icon: <TbDeviceAnalytics />
+
+  // },
+  
   {
-    id:1,
+    id:2,
     name:'Rank Tracking',
     path:'/',
     icon: <TbDeviceAnalytics />
 
   },
   {
-    id:2,
+    id:3,
     name:'keyword Research',
     path:'/search',
+    icon: <AiOutlineBarChart />
+  },
+  {
+    id:4,
+    name:'Projects',
+    path:'#',
     icon: <AiOutlineBarChart />
   },
   // {

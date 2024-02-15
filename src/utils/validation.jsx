@@ -19,3 +19,9 @@ export const registrationSchema = z.object({
   message: "Passwords don't match",
   path: ["rePassword"], 
 });
+
+
+export const formSchema = z.object({
+  firstDropdown: z.string().nonempty({ message: "This field is required" }),
+  secondDropdown: z.array(z.string()).nonempty({ message: "This field is required" }),
+});

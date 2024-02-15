@@ -41,7 +41,7 @@ const QueryKeyword = ({ hasKeywordData, hasUrlData }) => {
   
 
   return (
-    <div className={`mx-auto  bg-white
+    <div className={`mx-auto  bg-white h-0
      transition-all 
     mt-[4rem] inset-0 duration-300 ease-in-out`}> 
       <div

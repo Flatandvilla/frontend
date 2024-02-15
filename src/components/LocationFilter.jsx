@@ -19,7 +19,6 @@ const LocationFilter = ({ selectedLocationFilter, setSelectedLocationFilter }) =
       {...innerProps}
       className="flex items-center p-2 hover:bg-gray-200 cursor-pointer"
     >
-      {/* <img src={image} alt={' '} className="w-8 h-8 mr-2" /> */}
       <span className="text-base">{label}</span>
     </div>
   );
@@ -28,6 +27,7 @@ const LocationFilter = ({ selectedLocationFilter, setSelectedLocationFilter }) =
     { value: 'US', label: 'USA', image: USA },
     { value: 'EG', label: 'Egypt', image: EGYPT },
     { value: 'AE', label: 'Dubai', image: AE },
+
   ];
 
   const handleChange = (selectedOption) => {
@@ -41,7 +41,6 @@ const LocationFilter = ({ selectedLocationFilter, setSelectedLocationFilter }) =
       onChange={handleChange}
       components={{ Option: LocationOption }}
       styles={customStyles}
-      className="mt-3"
     />
   );
 };

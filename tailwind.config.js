@@ -18,6 +18,8 @@ module.exports = {
       },
       screens: {
         '3xl': '2000px',
+        'lg-plus': '1044px',
+
       },
     },
   },
