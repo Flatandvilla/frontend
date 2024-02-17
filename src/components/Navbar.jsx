@@ -201,7 +201,7 @@ const Navbar = ({ toggle, show   }) => {
       </button> */}
 
 <div onClick={() => dispatch(toggle_Bookmark())} 
-      className='mr-4 text-blue  lg-plus:hidden inline-flex absolute right-[55px] top-[0.7rem]'
+      className='mr-4 text-blue  lg-plus:hidden inline-flex absolute right-[80px] top-[0.7rem]'
       style={{cursor:'pointer'}}>
       {isSidebarOpen ? <IoMdList size={25} /> : <IoMdList size={25} />}
 

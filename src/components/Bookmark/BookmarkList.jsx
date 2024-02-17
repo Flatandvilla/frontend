@@ -7,7 +7,7 @@ import { createBookmark } from '../../redux/lib/createGroup';
 import { FiPlus } from "react-icons/fi";
 import { toast } from 'react-toastify';
 
-const BookmarkList = ({ bookmarks, searchBookmark, onBookmarkClick,averageRanksByBId }) => {
+const BookmarkList = ({ bookmarks, searchBookmark,averageRanksByBId }) => {
   const [newBookmarkName, setNewBookmarkName] = useState('');
   const displayBookmarkSlice = useSelector((state) => state.displayBookmarkSlice.bookmarks);
   const [expandedBookmarkId, setExpandedBookmarkId] = useState(null);
@@ -63,10 +63,10 @@ const BookmarkList = ({ bookmarks, searchBookmark, onBookmarkClick,averageRanksB
     await dispatch(fetchBookmarks());
   };
 
-  const handleBookmarkClick = (bookmarkId) => {
-    onBookmarkClick(bookmarkId);
+  // const handleBookmarkClick = (bookmarkId) => {
+  //   onBookmarkClick(bookmarkId);
 
-  };
+  // };
 
 
   const handleDeleteBookmark = async (userId, bookmarkId) => {
@@ -175,7 +175,7 @@ const handleRenameBookmark = async (bookmarkId, newName) => {
 
         key={bookmark.b_id}
         bookmark={bookmark}
-        handleBookmarkClick={() => handleBookmarkClick(bookmark.b_id)}
+        // handleBookmarkClick={() => handleBookmarkClick(bookmark.b_id)}
         isExpanded={expandedBookmarkId === bookmark.b_id}
         averageRank={averageRanksByBId[bookmark.b_id] || 0} 
         handleDeleteBookmark={() => handleDeleteBookmark(userId, bookmark.b_id)}

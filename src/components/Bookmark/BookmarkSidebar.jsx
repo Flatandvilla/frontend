@@ -46,19 +46,7 @@ const BookmarkSidebar = ({ isOpen, onClose, folderRanks }) => {
 
     setAverageRanksByBId(newAverageRanks);
   }, [folderRanks]);
-  const fetchFavorites = async (bookmarkId) => {
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/DisplayFavos/${userId}/${bookmarkId}/`);
-      setSelectedFavorites(response.data); // Update the state with fetched favorites
-    } catch (error) {
-      console.error('Error fetching favorites:', error);
-    }
-  };
-
-  const handleBookmarkSelection = (bookmarkId) => {
-
-    fetchFavorites(bookmarkId);
-  };
+ 
   
 
   return (
@@ -100,7 +88,6 @@ const BookmarkSidebar = ({ isOpen, onClose, folderRanks }) => {
           <BookmarkList
             bookmarks={bookmarks_Display}
             searchBookmark={searchBookmark}
-            onBookmarkClick={handleBookmarkSelection}
             averageRanksByBId={averageRanksByBId}
           />
          )} 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { GrFormPreviousLink } from "react-icons/gr";
+import { fetchFavorites } from '../../redux/lib/favoritesSlice';
 
 const FavouriteBookmark = ({ favorites, onBackClick }) => {
   const uniqueQueries = new Set();
@@ -10,7 +11,6 @@ const FavouriteBookmark = ({ favorites, onBackClick }) => {
     uniqueQueries.add(favorite.rank.query);
     return isUnique;
   });
-console.log(uniqueFavorites)
   return (
     <div>
       <div className="flex justify-start mb-4 bg-white w-7 h-8">

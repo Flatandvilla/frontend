@@ -6,8 +6,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Transition } from '@headlessui/react';
 import { FaEllipsisV, FaTrash } from 'react-icons/fa';
 import { Menu } from '@headlessui/react';
-
-const BookmarkItem = ({ bookmark, onRename, handleBookmarkClick, isExpanded, averageRank, handleDeleteBookmark }) => {
+import { useDispatch } from 'react-redux';
+import {fetchFavorites} from '../../redux/lib/favoritesSlice'
+const BookmarkItem = ({ bookmark, onRename, isExpanded, averageRank, handleDeleteBookmark }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [newName, setNewName] = useState(bookmark.name);
@@ -27,8 +28,10 @@ const BookmarkItem = ({ bookmark, onRename, handleBookmarkClick, isExpanded, ave
 
   const roundedAverageRank = averageRank ? averageRank.toFixed(1) : '0';
 
-
-
+const dispatch=useDispatch()
+const handleBookmarkClick=(b_id)=>{
+  dispatch(fetchFavorites(b_id));
+}
   return (
     <div ref={setNodeRef} className="flex justify-between items-center p-2 text-black bg-white 
     hover:bg-blue-100 rounded-md cursor-pointer">
